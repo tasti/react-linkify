@@ -62,29 +62,15 @@ var Urlize = (function (_React$Component) {
       return parsed;
     }
   }, {
-    key: 'rend',
-    value: function rend(parsed) {
-      var _this2 = this;
-
-      var rendered = parsed;
-
-      if (_react2['default'].isValidElement(parsed)) {
-        rendered = _react2['default'].renderToString(parsed);
-      } else if (parsed instanceof Array) {
-        rendered = parsed.map(function (p) {
-          return _this2.rend(p);
-        }).join('');
-      }
-
-      return rendered;
-    }
-  }, {
     key: 'render',
     value: function render() {
       var parsedHTML = this.parse(this.props.children);
-      var renderedHTML = this.rend(parsedHTML);
 
-      return _react2['default'].createElement('span', { dangerouslySetInnerHTML: { __html: renderedHTML } });
+      return _react2['default'].createElement(
+        'span',
+        null,
+        parsedHTML
+      );
     }
   }]);
 

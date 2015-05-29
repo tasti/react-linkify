@@ -31,25 +31,10 @@ class Urlize extends React.Component {
     return parsed;
   }
 
-  rend(parsed) {
-    var rendered = parsed;
-
-    if (React.isValidElement(parsed)) {
-      rendered = React.renderToString(parsed);
-    } else if (parsed instanceof Array) {
-      rendered = parsed.map(p => {
-        return this.rend(p);
-      }).join('');
-    }
-
-    return rendered;
-  }
-
   render() {
     var parsedHTML = this.parse(this.props.children);
-    var renderedHTML = this.rend(parsedHTML);
 
-    return <span dangerouslySetInnerHTML={{__html: renderedHTML}}></span>;
+    return <span>{parsedHTML}</span>;
   }
 }
 
