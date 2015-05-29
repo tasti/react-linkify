@@ -28,13 +28,24 @@ var Urlize = (function (_React$Component) {
   _inherits(Urlize, _React$Component);
 
   _createClass(Urlize, [{
+    key: 'parse',
+    value: function parse(text) {
+      var words = text.split(' ');
+
+      words = words.map(function (word) {
+        if (word.match(/^https?:\/\/\w/i)) {
+          word = '<a href="' + word + '">' + word + '</a>';
+        }
+
+        return word;
+      });
+
+      return words.join(' ');
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return _react2['default'].createElement(
-        'span',
-        null,
-        this.props.children
-      );
+      return _react2['default'].createElement('span', { dangerouslySetInnerHTML: { __html: this.parse(this.props.children) } });
     }
   }]);
 
