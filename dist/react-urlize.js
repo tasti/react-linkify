@@ -28,24 +28,63 @@ var Urlize = (function (_React$Component) {
   _inherits(Urlize, _React$Component);
 
   _createClass(Urlize, [{
-    key: 'parse',
-    value: function parse(text) {
-      var words = text.split(' ');
+    key: 'parseString',
+    value: function parseString(string) {
+      var words = string.split(' ');
 
       words = words.map(function (word) {
         if (word.match(/^https?:\/\/\w/i)) {
-          word = '<a href="' + word + '">' + word + '</a>';
+          word = _react2['default'].createElement('a', { href: word }, word);
         }
 
-        return word;
+        return _react2['default'].createElement('span', {}, word);;
       });
 
-      return words.join(' ');
+      return words;
+    }
+  }, {
+    key: 'parse',
+    value: function parse(children) {
+      var _this = this;
+
+      var parsed = children;
+
+      if (typeof children === 'string') {
+        parsed = this.parseString(children);
+      } else if (_react2['default'].isValidElement(children)) {
+        parsed = _react2['default'].cloneElement(children, {}, this.parse(children.props.children));
+      } else if (children instanceof Array) {
+        parsed = children.map(function (child) {
+          return _this.parse(child);
+        });
+      }
+
+      return parsed;
+    }
+  }, {
+    key: 'rend',
+    value: function rend(parsed) {
+      var _this2 = this;
+
+      var rendered = parsed;
+
+      if (_react2['default'].isValidElement(parsed)) {
+        rendered = _react2['default'].renderToString(parsed);
+      } else if (parsed instanceof Array) {
+        rendered = parsed.map(function (p) {
+          return _this2.rend(p);
+        }).join('');
+      }
+
+      return rendered;
     }
   }, {
     key: 'render',
     value: function render() {
-      return _react2['default'].createElement('span', { dangerouslySetInnerHTML: { __html: this.parse(this.props.children) } });
+      var parsedHTML = this.parse(this.props.children);
+      var renderedHTML = this.rend(parsedHTML);
+
+      return _react2['default'].createElement('span', { dangerouslySetInnerHTML: { __html: renderedHTML } });
     }
   }]);
 
