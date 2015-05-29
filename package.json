@@ -4,7 +4,7 @@
   "description": "A React component to parse URLs into links",
   "author": "Tasti Zakarie",
   "license": "MIT",
-  "main": "react-urlize.jsx",
+  "main": "dist/react-urlize.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/tasti/react-urlize.git"
