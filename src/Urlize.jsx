@@ -6,13 +6,13 @@ class Urlize extends React.Component {
 
     words = words.map(word => {
       if (word.match(/^https?:\/\/\w/i)) {
-        word = React.createElement('a', {href: word}, word);
+        return React.createElement('a', {href: word}, word);
       }
 
-      return React.createElement('span', {}, word);;
+      return React.createElement('span', {}, word);
     });
 
-    return words;
+    return (words.length === 1) ? words[0] : words;
   }
 
   parse(children) {
@@ -32,9 +32,9 @@ class Urlize extends React.Component {
   }
 
   render() {
-    var parsedHTML = this.parse(this.props.children);
+    var parsedChildren = this.parse(this.props.children);
 
-    return <span>{parsedHTML}</span>;
+    return <span className="Urlize">{parsedChildren}</span>;
   }
 }
 

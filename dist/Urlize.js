@@ -34,13 +34,13 @@ var Urlize = (function (_React$Component) {
 
       words = words.map(function (word) {
         if (word.match(/^https?:\/\/\w/i)) {
-          word = _react2['default'].createElement('a', { href: word }, word);
+          return _react2['default'].createElement('a', { href: word }, word);
         }
 
-        return _react2['default'].createElement('span', {}, word);;
+        return _react2['default'].createElement('span', {}, word);
       });
 
-      return words;
+      return words.length === 1 ? words[0] : words;
     }
   }, {
     key: 'parse',
@@ -64,12 +64,12 @@ var Urlize = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      var parsedHTML = this.parse(this.props.children);
+      var parsedChildren = this.parse(this.props.children);
 
       return _react2['default'].createElement(
         'span',
-        null,
-        parsedHTML
+        { className: 'Urlize' },
+        parsedChildren
       );
     }
   }]);
