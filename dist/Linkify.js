@@ -30,17 +30,22 @@ var Linkify = (function (_React$Component) {
   _createClass(Linkify, [{
     key: 'parseString',
     value: function parseString(string) {
-      var words = string.split(' ');
+      var elements = [];
 
-      words = words.map(function (word) {
-        if (word.match(/^https?:\/\/\w/i)) {
-          return _react2['default'].createElement('a', { href: word }, word);
+      while (string.search(Linkify.regex.url) !== -1) {
+        var match = string.match(Linkify.regex.url)[0];
+        var idx = string.search(Linkify.regex.url);
+        var len = match.length;
+
+        if (idx > 0) {
+          elements.push(string.substring(0, idx));
         }
+        string = string.substring(idx + len);
 
-        return _react2['default'].createElement('span', {}, word);
-      });
+        elements.push(_react2['default'].createElement('a', { href: match }, match));
+      }
 
-      return words.length === 1 ? words[0] : words;
+      return elements.length === 1 ? elements[0] : elements;
     }
   }, {
     key: 'parse',
@@ -72,6 +77,12 @@ var Linkify = (function (_React$Component) {
         parsedChildren
       );
     }
+  }], [{
+    key: 'regex',
+    value: {
+      url: /\b(?:(?:https?):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]/i
+    },
+    enumerable: true
   }]);
 
   return Linkify;

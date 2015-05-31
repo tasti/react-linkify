@@ -10,8 +10,8 @@
     "url": "https://github.com/tasti/react-linkify.git"
   },
   "scripts": {
-    "build": "babel src/Linkify.jsx -o dist/Linkify.js",
-    "test": "jest"
+    "build": "babel --stage 0 src/Linkify.jsx -o dist/Linkify.js",
+    "test": "BABEL_JEST_STAGE=0 jest"
   },
   "devDependencies": {
     "react": "~0.13.3",
