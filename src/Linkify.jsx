@@ -5,7 +5,7 @@ class Linkify extends React.Component {
     url: /\b(?:(?:https?):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]/i
   }
 
-  parseString(string) {
+  static parseString(string) {
     let elements = [];
 
     while (string.search(Linkify.regex.url) !== -1) {
@@ -21,19 +21,25 @@ class Linkify extends React.Component {
       elements.push(React.createElement('a', {href: match}, match));
     }
 
+    if (string.length > 0) {
+      elements.push(string);
+    }
+
     return (elements.length === 1) ? elements[0] : elements;
   }
 
-  parse(children) {
+  static parse(children) {
     let parsed = children;
 
     if (typeof children === 'string') {
-      parsed = this.parseString(children);
+      parsed = Linkify.parseString(children);
     } else if (React.isValidElement(children)) {
-      parsed = React.cloneElement(children, {}, this.parse(children.props.children));
+      if ((children.type !== 'a') && (children.type !== 'button')) {
+        parsed = React.cloneElement(children, {}, Linkify.parse(children.props.children));
+      }
     } else if (children instanceof Array) {
       parsed = children.map(child => {
-        return this.parse(child);
+        return Linkify.parse(child);
       });
     }
 
@@ -41,7 +47,7 @@ class Linkify extends React.Component {
   }
 
   render() {
-    let parsedChildren = this.parse(this.props.children);
+    let parsedChildren = Linkify.parse(this.props.children);
 
     return <span className="Linkify">{parsedChildren}</span>;
   }

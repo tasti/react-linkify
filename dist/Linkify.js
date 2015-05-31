@@ -28,6 +28,23 @@ var Linkify = (function (_React$Component) {
   _inherits(Linkify, _React$Component);
 
   _createClass(Linkify, [{
+    key: 'render',
+    value: function render() {
+      var parsedChildren = Linkify.parse(this.props.children);
+
+      return _react2['default'].createElement(
+        'span',
+        { className: 'Linkify' },
+        parsedChildren
+      );
+    }
+  }], [{
+    key: 'regex',
+    value: {
+      url: /\b(?:(?:https?):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]/i
+    },
+    enumerable: true
+  }, {
     key: 'parseString',
     value: function parseString(string) {
       var elements = [];
@@ -45,44 +62,31 @@ var Linkify = (function (_React$Component) {
         elements.push(_react2['default'].createElement('a', { href: match }, match));
       }
 
+      if (string.length > 0) {
+        elements.push(string);
+      }
+
       return elements.length === 1 ? elements[0] : elements;
     }
   }, {
     key: 'parse',
     value: function parse(children) {
-      var _this = this;
-
       var parsed = children;
 
       if (typeof children === 'string') {
-        parsed = this.parseString(children);
+        parsed = Linkify.parseString(children);
       } else if (_react2['default'].isValidElement(children)) {
-        parsed = _react2['default'].cloneElement(children, {}, this.parse(children.props.children));
+        if (children.type !== 'a' && children.type !== 'button') {
+          parsed = _react2['default'].cloneElement(children, {}, Linkify.parse(children.props.children));
+        }
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
-          return _this.parse(child);
+          return Linkify.parse(child);
         });
       }
 
       return parsed;
     }
-  }, {
-    key: 'render',
-    value: function render() {
-      var parsedChildren = this.parse(this.props.children);
-
-      return _react2['default'].createElement(
-        'span',
-        { className: 'Linkify' },
-        parsedChildren
-      );
-    }
-  }], [{
-    key: 'regex',
-    value: {
-      url: /\b(?:(?:https?):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]/i
-    },
-    enumerable: true
   }]);
 
   return Linkify;
