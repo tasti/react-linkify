@@ -16,18 +16,18 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var Urlize = (function (_React$Component) {
-  function Urlize() {
-    _classCallCheck(this, Urlize);
+var Linkify = (function (_React$Component) {
+  function Linkify() {
+    _classCallCheck(this, Linkify);
 
     if (_React$Component != null) {
       _React$Component.apply(this, arguments);
     }
   }
 
-  _inherits(Urlize, _React$Component);
+  _inherits(Linkify, _React$Component);
 
-  _createClass(Urlize, [{
+  _createClass(Linkify, [{
     key: 'parseString',
     value: function parseString(string) {
       var words = string.split(' ');
@@ -68,14 +68,14 @@ var Urlize = (function (_React$Component) {
 
       return _react2['default'].createElement(
         'span',
-        { className: 'Urlize' },
+        { className: 'Linkify' },
         parsedChildren
       );
     }
   }]);
 
-  return Urlize;
+  return Linkify;
 })(_react2['default'].Component);
 
-exports['default'] = Urlize;
+exports['default'] = Linkify;
 module.exports = exports['default'];

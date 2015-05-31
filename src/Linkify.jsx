@@ -1,6 +1,6 @@
 import React from 'react';
 
-class Urlize extends React.Component {
+class Linkify extends React.Component {
   parseString(string) {
     var words = string.split(' ');
 
@@ -34,8 +34,8 @@ class Urlize extends React.Component {
   render() {
     var parsedChildren = this.parse(this.props.children);
 
-    return <span className="Urlize">{parsedChildren}</span>;
+    return <span className="Linkify">{parsedChildren}</span>;
   }
 }
 
-export default Urlize;
+export default Linkify;

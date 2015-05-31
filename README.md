@@ -1,2 +1,2 @@
-# react-urlize
-React component to parse URLs into links
+# react-linkify
+React component to parse URLs in text into clickable links

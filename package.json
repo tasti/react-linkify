@@ -1,16 +1,16 @@
 {
-  "name": "react-urlize",
+  "name": "react-linkify",
   "version": "0.0.1",
-  "description": "React component to parse URLs into links",
+  "description": "React component to parse URLs in text into clickable links",
   "author": "Tasti Zakarie",
   "license": "MIT",
-  "main": "dist/Urlize.js",
+  "main": "dist/Linkify.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tasti/react-urlize.git"
+    "url": "https://github.com/tasti/react-linkify.git"
   },
   "scripts": {
-    "build": "babel src/Urlize.jsx -o dist/Urlize.js",
+    "build": "babel src/Linkify.jsx -o dist/Linkify.js",
     "test": "jest"
   },
   "devDependencies": {
