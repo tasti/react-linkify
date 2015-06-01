@@ -28,30 +28,13 @@ var Linkify = (function (_React$Component) {
   _inherits(Linkify, _React$Component);
 
   _createClass(Linkify, [{
-    key: 'render',
-    value: function render() {
-      var parsedChildren = Linkify.parse(this.props.children);
-
-      return _react2['default'].createElement(
-        'span',
-        { className: 'Linkify' },
-        parsedChildren
-      );
-    }
-  }], [{
-    key: 'regex',
-    value: {
-      url: /\b(?:(?:https?):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)[-A-Z0-9+&@#/%=~_|$?!:,.]*[A-Z0-9+&@#/%=~_|$]/i
-    },
-    enumerable: true
-  }, {
     key: 'parseString',
     value: function parseString(string) {
       var elements = [];
 
-      while (string.search(Linkify.regex.url) !== -1) {
-        var match = string.match(Linkify.regex.url)[0];
-        var idx = string.search(Linkify.regex.url);
+      while (string.search(this.props.urlRegex) !== -1) {
+        var match = string.match(this.props.urlRegex)[0];
+        var idx = string.search(this.props.urlRegex);
         var len = match.length;
 
         if (idx > 0) {
@@ -59,7 +42,17 @@ var Linkify = (function (_React$Component) {
         }
         string = string.substring(idx + len);
 
-        elements.push(_react2['default'].createElement('a', { href: match }, match));
+        var props = {};
+        for (var key in this.props.properties) {
+          var val = this.props.properties[key];
+          if (val === Linkify.URL_MATCH) {
+            val = match;
+          }
+
+          props[key] = val;
+        }
+
+        elements.push(_react2['default'].createElement(this.props.component, props, match));
       }
 
       if (string.length > 0) {
@@ -71,22 +64,53 @@ var Linkify = (function (_React$Component) {
   }, {
     key: 'parse',
     value: function parse(children) {
+      var _this = this;
+
       var parsed = children;
 
       if (typeof children === 'string') {
-        parsed = Linkify.parseString(children);
-      } else if (_react2['default'].isValidElement(children)) {
-        if (children.type !== 'a' && children.type !== 'button') {
-          parsed = _react2['default'].cloneElement(children, {}, Linkify.parse(children.props.children));
-        }
+        parsed = this.parseString(children);
+      } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
+        parsed = _react2['default'].cloneElement(children, {}, this.parse(children.props.children));
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
-          return Linkify.parse(child);
+          return _this.parse(child);
         });
       }
 
       return parsed;
     }
+  }, {
+    key: 'render',
+    value: function render() {
+      var parsedChildren = this.parse(this.props.children);
+
+      return _react2['default'].createElement(
+        'span',
+        { className: 'Linkify' },
+        parsedChildren
+      );
+    }
+  }], [{
+    key: 'URL_MATCH',
+    value: 'LINKIFY_URL_MATCH',
+    enumerable: true
+  }, {
+    key: 'propTypes',
+    value: {
+      component: _react2['default'].PropTypes.any,
+      properties: _react2['default'].PropTypes.object,
+      urlRegex: _react2['default'].PropTypes.object
+    },
+    enumerable: true
+  }, {
+    key: 'defaultProps',
+    value: {
+      component: 'a',
+      properties: { href: 'LINKIFY_URL_MATCH' },
+      urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i
+    },
+    enumerable: true
   }]);
 
   return Linkify;
