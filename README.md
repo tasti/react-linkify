@@ -13,7 +13,7 @@ npm install react-linkify --save
 var Linkify = require('react-linkify');
 
 React.render(
-  <Linkify>Examples are available at tasti.github.io/react-linkify/.</Linkify>,
+  <Linkify>Examples are available at http://tasti.github.io/react-linkify/.</Linkify>,
   document.body
 );
 ```
@@ -50,4 +50,4 @@ Some of the cases the default regex handles (bold is the link):
 
 ## Examples
 
-Examples are available at [tasti.github.io/react-linkify/](tasti.github.io/react-linkify/).
+Available at [tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
