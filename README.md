@@ -13,7 +13,7 @@ npm install react-linkify --save
 var Linkify = require('react-linkify');
 
 React.render(
-  <Linkify>Examples are available at http://tasti.github.io/react-linkify/.</Linkify>,
+  <Linkify>Examples are available at tasti.github.io/react-linkify/.</Linkify>,
   document.body
 );
 ```
@@ -28,9 +28,9 @@ _default:_ `'a'`
 **properties**  
 The props that will be added to every matched component.  
 _type:_ `object`  
-_default:_ `{href: Linkify.MATCH}`
+_default:_ `{href: Linkify.URL_MATCH}`
 
-NOTE: Use `Linkify.MATCH` as a value to specify the matched link.
+NOTE: Use `Linkify.URL_MATCH` as a value to specify the matched link.
 
 **urlRegex**  
 The regular expression used to identify url links.  
@@ -39,15 +39,15 @@ _default:_ `/\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/
 
 NOTE: I recommend that you use the default regex. If you want to modify it for some use case, it's probably better to file an issue and change the default since someone else might have the same issue.
 
-Some of the cases the default regex handles (bold is the link):
-- **github&#8203;.com**
-- **www&#8203;.google.com**
-- **http://www&#8203;.zakarie.com**
-- **https://www&#8203;.facebook.com**
-- "**www&#8203;.google.com:8080**"
-- **http://en&#8203;.wikipedia.org/wiki/React_(JavaScript_library)**
-- Examples are available at **tasti&#8203;.github.io/react-linkify/**.
+Some of the cases the default regex handles (link inside code block):
+- `github.com`
+- `www.google.com`
+- `http://www.zakarie.com`
+- `https://www.facebook.com`
+- "`www.google.com:8080`"
+- `http://en.wikipedia.org/wiki/React_(JavaScript_library)`
+- Examples are available at `http://tasti.github.io/react-linkify/`.
 
 ## Examples
 
-Available at [tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
+Available at [http://tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
