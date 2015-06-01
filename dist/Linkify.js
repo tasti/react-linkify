@@ -28,36 +28,64 @@ var Linkify = (function (_React$Component) {
   _inherits(Linkify, _React$Component);
 
   _createClass(Linkify, [{
+    key: 'parseStringHelper',
+    value: function parseStringHelper(string, elements) {
+      if (string === '') {
+        return elements;
+      }
+
+      var urlIdx = string.search(this.props.urlRegex);
+      var emailIdx = string.search(this.props.emailRegex);
+
+      if (urlIdx === -1 && emailIdx === -1) {
+        elements.push(string);
+        return this.parseStringHelper('', elements);
+      } else if (urlIdx === -1) {
+        urlIdx = emailIdx + 1;
+      } else if (emailIdx === -1) {
+        emailIdx = urlIdx + 1;
+      }
+
+      var idx = undefined,
+          regex = undefined;
+      if (urlIdx < emailIdx) {
+        idx = urlIdx;
+        regex = this.props.urlRegex;
+      } else {
+        // Email has precedence over url when equal
+        idx = emailIdx;
+        regex = this.props.emailRegex;
+      }
+
+      var match = string.match(regex)[0];
+      var len = match.length;
+
+      // Push the preceding text if there is any
+      if (idx > 0) {
+        elements.push(string.substring(0, idx));
+      }
+
+      // Shallow update values that specified the match
+      var props = {};
+      for (var key in this.props.properties) {
+        var val = this.props.properties[key];
+        if (val === Linkify.MATCH) {
+          val = idx === emailIdx ? 'mailto:' + match : match;
+        }
+
+        props[key] = val;
+      }
+
+      elements.push(_react2['default'].createElement(this.props.component, props, match));
+
+      return this.parseStringHelper(string.substring(idx + len), elements);
+    }
+  }, {
     key: 'parseString',
     value: function parseString(string) {
       var elements = [];
 
-      while (string.search(this.props.urlRegex) !== -1) {
-        var match = string.match(this.props.urlRegex)[0];
-        var idx = string.search(this.props.urlRegex);
-        var len = match.length;
-
-        if (idx > 0) {
-          elements.push(string.substring(0, idx));
-        }
-        string = string.substring(idx + len);
-
-        var props = {};
-        for (var key in this.props.properties) {
-          var val = this.props.properties[key];
-          if (val === Linkify.URL_MATCH) {
-            val = match;
-          }
-
-          props[key] = val;
-        }
-
-        elements.push(_react2['default'].createElement(this.props.component, props, match));
-      }
-
-      if (string.length > 0) {
-        elements.push(string);
-      }
+      this.parseStringHelper(string, elements);
 
       return elements.length === 1 ? elements[0] : elements;
     }
@@ -92,23 +120,25 @@ var Linkify = (function (_React$Component) {
       );
     }
   }], [{
-    key: 'URL_MATCH',
-    value: 'LINKIFY_URL_MATCH',
+    key: 'MATCH',
+    value: 'LINKIFY_MATCH',
     enumerable: true
   }, {
     key: 'propTypes',
     value: {
       component: _react2['default'].PropTypes.any,
       properties: _react2['default'].PropTypes.object,
-      urlRegex: _react2['default'].PropTypes.object
+      urlRegex: _react2['default'].PropTypes.object,
+      emailRegex: _react2['default'].PropTypes.object
     },
     enumerable: true
   }, {
     key: 'defaultProps',
     value: {
       component: 'a',
-      properties: { href: 'LINKIFY_URL_MATCH' },
-      urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i
+      properties: { href: 'LINKIFY_MATCH' },
+      urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
+      emailRegex: /\S+@\S+\.\S+/ // TODO: Use a more rigorous regex
     },
     enumerable: true
   }]);

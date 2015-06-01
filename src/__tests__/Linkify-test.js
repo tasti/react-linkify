@@ -98,6 +98,15 @@ describe('Linkify', () => {
 
       expect(output).toEqual(input);
     });
+
+    it('should parse email', () => {
+      let input = 'tasti@zakarie.com';
+      let output = linkify.parseString(input);
+
+      expect(output.type).toEqual('a');
+      expect(output.props.href).toEqual(`mailto:${input}`);
+      expect(output.props.children).toEqual(input);
+    });
   });
 
   describe('#render', () => {
@@ -109,7 +118,7 @@ describe('Linkify', () => {
 
     // Issue with ES6 not allowing use of a static variable inside another
     it('should contain the same string', () => {
-      expect(Linkify.defaultProps.properties.href).toEqual(Linkify.URL_MATCH);
+      expect(Linkify.defaultProps.properties.href).toEqual(Linkify.MATCH);
     });
   });
 });

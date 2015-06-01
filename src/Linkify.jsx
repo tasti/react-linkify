@@ -1,53 +1,80 @@
 import React from 'react';
 
 class Linkify extends React.Component {
-  static URL_MATCH = 'LINKIFY_URL_MATCH'
+  static MATCH = 'LINKIFY_MATCH'
 
   static propTypes = {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
-    urlRegex: React.PropTypes.object
+    urlRegex: React.PropTypes.object,
+    emailRegex: React.PropTypes.object
   }
 
   static defaultProps = {
     component: 'a',
-    properties: {href: 'LINKIFY_URL_MATCH'},
-    urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i
+    properties: {href: 'LINKIFY_MATCH'},
+    urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
+    emailRegex: /\S+@\S+\.\S+/ // TODO: Use a more rigorous regex
+  }
+
+  parseStringHelper(string, elements) {
+    if (string === '') {
+      return elements;
+    }
+
+    let urlIdx = string.search(this.props.urlRegex);
+    let emailIdx = string.search(this.props.emailRegex);
+
+    if ((urlIdx === -1) && (emailIdx === -1)) {
+      elements.push(string);
+      return this.parseStringHelper('', elements);
+    } else if (urlIdx === -1) {
+      urlIdx = emailIdx + 1;
+    } else if (emailIdx === -1) {
+      emailIdx = urlIdx + 1;
+    }
+
+    let idx, regex;
+    if (urlIdx < emailIdx) {
+      idx = urlIdx;
+      regex = this.props.urlRegex;
+    } else { // Email has precedence over url when equal
+      idx = emailIdx;
+      regex = this.props.emailRegex;
+    }
+
+    let match = string.match(regex)[0];
+    let len = match.length;
+
+    // Push the preceding text if there is any
+    if (idx > 0) {
+      elements.push(string.substring(0, idx));
+    }
+
+    // Shallow update values that specified the match
+    let props = {};
+    for (let key in this.props.properties) {
+      let val = this.props.properties[key];
+      if (val === Linkify.MATCH) {
+        val = (idx === emailIdx) ? `mailto:${match}` : match;
+      }
+
+      props[key] = val;
+    }
+
+    elements.push(React.createElement(
+      this.props.component,
+      props,
+      match
+    ));
+
+    return this.parseStringHelper(string.substring(idx + len), elements);
   }
 
   parseString(string) {
     let elements = [];
 
-    while (string.search(this.props.urlRegex) !== -1) {
-      let match = string.match(this.props.urlRegex)[0];
-      let idx = string.search(this.props.urlRegex);
-      let len = match.length;
-      
-      if (idx > 0) {
-        elements.push(string.substring(0, idx));
-      }
-      string = string.substring(idx + len);
-
-      let props = {};
-      for (let key in this.props.properties) {
-        let val = this.props.properties[key];
-        if (val === Linkify.URL_MATCH) {
-          val = match;
-        }
-
-        props[key] = val;
-      }
-
-      elements.push(React.createElement(
-        this.props.component,
-        props,
-        match
-      ));
-    }
-
-    if (string.length > 0) {
-      elements.push(string);
-    }
+    this.parseStringHelper(string, elements);
 
     return (elements.length === 1) ? elements[0] : elements;
   }

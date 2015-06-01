@@ -28,14 +28,21 @@ _default:_ `'a'`
 **properties**  
 The props that will be added to every matched component.  
 _type:_ `object`  
-_default:_ `{href: Linkify.URL_MATCH}`
+_default:_ `{href: Linkify.MATCH}`
 
-NOTE: Use `Linkify.URL_MATCH` as a value to specify the matched link.
+NOTE: Use `Linkify.MATCH` as a value to specify the matched link.
 
 **urlRegex**  
 The regular expression used to identify url links.  
 _type:_ `object`  
 _default:_ `/\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i`
+
+NOTE: I recommend that you use the default regex. If you want to modify it for some use case, it's probably better to file an issue and change the default since someone else might have the same issue.
+
+**emailRegex**  
+The regular expression used to identify email links.  
+_type:_ `object`  
+_default:_ `/\S+@\S+\.\S+/`
 
 NOTE: I recommend that you use the default regex. If you want to modify it for some use case, it's probably better to file an issue and change the default since someone else might have the same issue.
 
@@ -47,6 +54,7 @@ Some of the cases the default regex handles (link inside code block):
 - "`www.google.com:8080`"
 - `http://en.wikipedia.org/wiki/React_(JavaScript_library)`
 - Examples are available at `http://tasti.github.io/react-linkify/`.
+- `tasti@zakarie.com`
 
 ## Examples
 

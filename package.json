@@ -14,7 +14,13 @@
     "react-linkify",
     "react",
     "linkify",
-    "react-component"
+    "react-component",
+    "link",
+    "url",
+    "email",
+    "autolink",
+    "urlize",
+    "urlify"
   ],
   "scripts": {
     "build": "babel --stage 0 src/Linkify.jsx -o dist/Linkify.js",
