@@ -10,6 +10,12 @@
     "type": "git",
     "url": "https://github.com/tasti/react-linkify.git"
   },
+  "keywords": [
+    "react-linkify",
+    "react",
+    "linkify",
+    "react-component"
+  ],
   "scripts": {
     "build": "babel --stage 0 src/Linkify.jsx -o dist/Linkify.js",
     "test": "BABEL_JEST_STAGE=0 jest"
