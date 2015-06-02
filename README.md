@@ -88,3 +88,4 @@ Some of the cases the default regex handles (link inside code block):
 - `http://en.wikipedia.org/wiki/React_(JavaScript_library)`
 - Examples are available at `http://tasti.github.io/react-linkify/`.
 - `tasti@zakarie.com`
+- For more information, contact `tasti@zakarie.com`.

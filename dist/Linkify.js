@@ -1,16 +1,20 @@
 'use strict';
 
-Object.defineProperty(exports, '__esModule', {
+var _inherits = require('babel-runtime/helpers/inherits')['default'];
+
+var _createClass = require('babel-runtime/helpers/create-class')['default'];
+
+var _classCallCheck = require('babel-runtime/helpers/class-call-check')['default'];
+
+var _Object$defineProperty = require('babel-runtime/core-js/object/define-property')['default'];
+
+var _Object$assign = require('babel-runtime/core-js/object/assign')['default'];
+
+var _interopRequireDefault = require('babel-runtime/helpers/interop-require-default')['default'];
+
+_Object$defineProperty(exports, '__esModule', {
   value: true
 });
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -76,7 +80,7 @@ var Linkify = (function (_React$Component) {
         props[key] = val;
       }
 
-      elements.push(_react2['default'].createElement(this.props.component, props, match));
+      elements.push(_react2['default'].createElement(this.props.component, _Object$assign(props, { key: Linkify.uniqueKey() }), match));
 
       return this.parseStringHelper(string.substring(idx + len), elements);
     }
@@ -99,7 +103,7 @@ var Linkify = (function (_React$Component) {
       if (typeof children === 'string') {
         parsed = this.parseString(children);
       } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
-        parsed = _react2['default'].cloneElement(children, {}, this.parse(children.props.children));
+        parsed = _react2['default'].cloneElement(children, { key: Linkify.uniqueKey() }, this.parse(children.props.children));
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
           return _this.parse(child);
@@ -124,6 +128,15 @@ var Linkify = (function (_React$Component) {
     value: 'LINKIFY_MATCH',
     enumerable: true
   }, {
+    key: 'keyCounter',
+    value: 0,
+    enumerable: true
+  }, {
+    key: 'uniqueKey',
+    value: function uniqueKey() {
+      return 'LINKIFY_KEY_' + ++Linkify.keyCounter;
+    }
+  }, {
     key: 'propTypes',
     value: {
       component: _react2['default'].PropTypes.any,
@@ -137,8 +150,9 @@ var Linkify = (function (_React$Component) {
     value: {
       component: 'a',
       properties: { href: 'LINKIFY_MATCH' },
+      // TODO: Improve regexs
       urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
-      emailRegex: /\S+@\S+\.\S+/ // TODO: Use a more rigorous regex
+      emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
     },
     enumerable: true
   }]);

@@ -3,6 +3,11 @@ import React from 'react';
 class Linkify extends React.Component {
   static MATCH = 'LINKIFY_MATCH'
 
+  static keyCounter = 0
+  static uniqueKey() {
+    return `LINKIFY_KEY_${++Linkify.keyCounter}`;
+  }
+
   static propTypes = {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
@@ -65,7 +70,7 @@ class Linkify extends React.Component {
 
     elements.push(React.createElement(
       this.props.component,
-      props,
+      Object.assign(props, {key: Linkify.uniqueKey()}),
       match
     ));
 
@@ -86,7 +91,11 @@ class Linkify extends React.Component {
     if (typeof children === 'string') {
       parsed = this.parseString(children);
     } else if (React.isValidElement(children) && (children.type !== 'a') && (children.type !== 'button')) {
-      parsed = React.cloneElement(children, {}, this.parse(children.props.children));
+      parsed = React.cloneElement(
+        children,
+        {key: Linkify.uniqueKey()},
+        this.parse(children.props.children)
+      );
     } else if (children instanceof Array) {
       parsed = children.map(child => {
         return this.parse(child);
