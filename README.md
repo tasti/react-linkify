@@ -1,6 +1,43 @@
 # [react-linkify](http://tasti.github.io/react-linkify/)
 React component to parse links (urls, emails, etc.) in text into clickable links
 
+## Examples
+
+In depth examples are available at [http://tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
+
+### Basic
+
+Any link that appears inside the `Linkify` component will become clickable.
+
+```
+<Linkify>See examples at tasti.github.io/react-linkify/.</Linkify>
+```
+
+Renders to:
+
+See examples at `tasti.github.io/react-linkify/`.
+
+### Advanced
+
+If you're feeling lazy, you can wrap `Linkify` around anywhere that you want links to become clickable. Even with nested elements, it traverses the tree to find links.
+
+```
+<Linkify>
+  <div>react-linkify <span>(tasti.github.io/react-linkify/)</span></div>
+    <div>React component to parse links (urls, emails, etc.) in text into clickable links</div>
+  See examples at tasti.github.io/react-linkify/.
+    <footer>Contact: tasti@zakarie.com</footer>
+</Linkify>
+```
+
+Renders to:
+
+react-linkify (`tasti.github.io/react-linkify/`)  
+React component to parse links (urls, emails, etc.) in text into clickable links  
+See examples at `tasti.github.io/react-linkify/`.  
+Contact: `tasti@zakarie.com`
+
+
 ## Installation
 
 ```
@@ -18,7 +55,7 @@ React.render(
 );
 ```
 
-### Properties
+## Props
 
 **component**  
 The type of component to wrap links in.  
@@ -37,14 +74,10 @@ The regular expression used to identify url links.
 _type:_ `object`  
 _default:_ `/\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i`
 
-NOTE: I recommend that you use the default regex. If you want to modify it for some use case, it's probably better to file an issue and change the default since someone else might have the same issue.
-
 **emailRegex**  
 The regular expression used to identify email links.  
 _type:_ `object`  
-_default:_ `/\S+@\S+\.\S+/`
-
-NOTE: I recommend that you use the default regex. If you want to modify it for some use case, it's probably better to file an issue and change the default since someone else might have the same issue.
+_default:_ `/\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i`
 
 Some of the cases the default regex handles (link inside code block):
 - `github.com`
@@ -55,7 +88,3 @@ Some of the cases the default regex handles (link inside code block):
 - `http://en.wikipedia.org/wiki/React_(JavaScript_library)`
 - Examples are available at `http://tasti.github.io/react-linkify/`.
 - `tasti@zakarie.com`
-
-## Examples
-
-Available at [http://tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).

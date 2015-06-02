@@ -107,6 +107,18 @@ describe('Linkify', () => {
       expect(output.props.href).toEqual(`mailto:${input}`);
       expect(output.props.children).toEqual(input);
     });
+
+    it('should parse email in sentence', () => {
+      let input = ['For more information, contact ', 'tasti@zakarie.com', '.'];
+      let output = linkify.parseString(input.join(''));
+
+      expect(Array.isArray(output)).toEqual(true);
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`mailto:${input[1]}`);
+      expect(output[1].props.children).toEqual(input[1]);
+      expect(output[2]).toEqual(input[2]);
+    });
   });
 
   describe('#render', () => {

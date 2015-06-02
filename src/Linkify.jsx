@@ -13,8 +13,9 @@ class Linkify extends React.Component {
   static defaultProps = {
     component: 'a',
     properties: {href: 'LINKIFY_MATCH'},
+    // TODO: Improve regexs
     urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
-    emailRegex: /\S+@\S+\.\S+/ // TODO: Use a more rigorous regex
+    emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
   }
 
   parseStringHelper(string, elements) {
