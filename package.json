@@ -23,7 +23,7 @@
     "urlify"
   ],
   "scripts": {
-    "build": "babel --stage 0 --optional runtime src/Linkify.jsx -o dist/Linkify.js",
+    "build": "babel --stage 0 src/Linkify.jsx -o dist/Linkify.js",
     "test": "BABEL_JEST_STAGE=0 jest"
   },
   "devDependencies": {

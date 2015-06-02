@@ -34,14 +34,17 @@ class Linkify extends React.Component {
     if ((urlIdx === -1) && (emailIdx === -1)) {
       elements.push(string);
       return this.parseStringHelper('', elements);
-    } else if (urlIdx === -1) {
-      urlIdx = emailIdx + 1;
-    } else if (emailIdx === -1) {
-      emailIdx = urlIdx + 1;
     }
 
     let idx, regex;
-    if (urlIdx < emailIdx) {
+
+    if (urlIdx === -1) {
+      idx = emailIdx;
+      regex = this.props.emailRegex;
+    } else if (emailIdx === -1) {
+      idx = urlIdx;
+      regex = this.props.urlRegex;
+    } else if (urlIdx < emailIdx) {
       idx = urlIdx;
       regex = this.props.urlRegex;
     } else { // Email has precedence over url when equal
@@ -58,7 +61,7 @@ class Linkify extends React.Component {
     }
 
     // Shallow update values that specified the match
-    let props = {};
+    let props = {key: Linkify.uniqueKey()};
     for (let key in this.props.properties) {
       let val = this.props.properties[key];
       if (val === Linkify.MATCH) {
@@ -70,7 +73,7 @@ class Linkify extends React.Component {
 
     elements.push(React.createElement(
       this.props.component,
-      Object.assign(props, {key: Linkify.uniqueKey()}),
+      props,
       match
     ));
 
