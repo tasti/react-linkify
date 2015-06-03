@@ -65,7 +65,11 @@ class Linkify extends React.Component {
     for (let key in this.props.properties) {
       let val = this.props.properties[key];
       if (val === Linkify.MATCH) {
-        val = (idx === emailIdx) ? `mailto:${match}` : match;
+        if (idx === emailIdx) {
+          val = `mailto:${match}`;
+        } else if (idx === urlIdx) {
+          val = (match.substring(0, 4).toLowerCase() === 'http') ? match : `http://${match}`;
+        }
       }
 
       props[key] = val;

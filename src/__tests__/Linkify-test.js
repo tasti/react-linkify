@@ -39,7 +39,7 @@ describe('Linkify', () => {
       let output = linkify.parseString(input);
 
       expect(output.type).toEqual('a');
-      expect(output.props.href).toEqual(input);
+      expect(output.props.href).toEqual(`http://${input}`);
       expect(output.props.children).toEqual(input);
     });
 
