@@ -20558,7 +20558,7 @@
 	  }], [{
 	    key: 'examples',
 	    value: [{
-	      description: 'Basic',
+	      description: 'Wrapping around plain text',
 	      before: _react2['default'].createElement(
 	        'div',
 	        null,
@@ -20567,10 +20567,10 @@
 	      after: _react2['default'].createElement(
 	        _reactLinkify2['default'],
 	        null,
-	        'See examples at https://github.com/tasti/react-linkify/.'
+	        'See source code at https://github.com/tasti/react-linkify/.'
 	      )
 	    }, {
-	      description: 'Advanced',
+	      description: 'Wrapping around DOM elements',
 	      before: _react2['default'].createElement(
 	        'div',
 	        null,
@@ -20613,12 +20613,48 @@
 	          null,
 	          'React component to parse links (urls, emails, etc.) in text into clickable links'
 	        ),
-	        'See examples at https://github.com/tasti/react-linkify/.',
+	        'See source code at https://github.com/tasti/react-linkify/.',
 	        _react2['default'].createElement(
 	          'footer',
 	          null,
 	          'Contact: tasti@zakarie.com'
 	        )
+	      )
+	    }, {
+	      description: 'Doesn\'t modify links that are already clickable',
+	      before: _react2['default'].createElement(
+	        'div',
+	        null,
+	        'See source code at ',
+	        _react2['default'].createElement(
+	          'a',
+	          { href: 'https://github.com/tasti/react-linkify/' },
+	          'https://github.com/tasti/react-linkify/'
+	        ),
+	        '.'
+	      ),
+	      after: _react2['default'].createElement(
+	        _reactLinkify2['default'],
+	        null,
+	        'See source code at ',
+	        _react2['default'].createElement(
+	          'a',
+	          { href: 'https://github.com/tasti/react-linkify/' },
+	          'https://github.com/tasti/react-linkify/'
+	        ),
+	        '.'
+	      )
+	    }, {
+	      description: 'Adding properties to links',
+	      before: _react2['default'].createElement(
+	        'div',
+	        null,
+	        'See source code at https://github.com/tasti/react-linkify/.'
+	      ),
+	      after: _react2['default'].createElement(
+	        _reactLinkify2['default'],
+	        { properties: { style: { color: 'red', fontWeight: 'bold' } } },
+	        'See source code at https://github.com/tasti/react-linkify/.'
 	      )
 	    }],
 	    enumerable: true
@@ -20677,7 +20713,6 @@
 	        elements.push(string);
 	        return this.parseStringHelper('', elements);
 	      }
-
 	      var idx = undefined,
 	          regex = undefined;
 
@@ -20956,6 +20991,32 @@
 	    },
 	    enumerable: true
 	  }, {
+	    key: 'objectToString',
+	    value: function objectToString(obj) {
+	      var string = '';
+
+	      if (obj instanceof Object) {
+	        string += '{';
+	        Object.keys(obj).forEach(function (key, i) {
+	          if (key === 'href' && obj[key] === 'LINKIFY_MATCH') {
+	            return;
+	          }
+
+	          if (i !== 0) {
+	            string += ', ';
+	          }
+
+	          string += '' + key + ': ';
+	          string += ExampleSection.objectToString(obj[key]);
+	        });
+	        string += '}';
+	      } else {
+	        string += obj;
+	      }
+
+	      return string;
+	    }
+	  }, {
 	    key: 'renderToStaticMarkup',
 	    value: function renderToStaticMarkup(element) {
 	      var string = '';
@@ -20966,7 +21027,27 @@
 	        var type = typeof element.type === 'string' ? element.type : element.type.name;
 
 	        string += '<' + type;
-	        // props
+
+	        // Props
+	        var ignoreProps = ['children', 'urlRegex', 'emailRegex'];
+	        Object.keys(element.props).forEach(function (key) {
+	          if (ignoreProps.indexOf(key) !== -1) {
+	            return;
+	          } else if (key === 'component' && element.props[key] === 'a') {
+	            return;
+	          } else if (key === 'properties') {
+	            var propsString = ExampleSection.objectToString(element.props[key]);
+
+	            if (propsString !== '{}') {
+	              string += ' ' + key + '=' + propsString;
+	            }
+
+	            return;
+	          }
+
+	          string += ' ' + key + '="' + element.props[key] + '"';
+	        });
+
 	        string += '>';
 	        string += ExampleSection.renderToStaticMarkup(element.props.children);
 	        string += '</' + type + '>';

@@ -6,6 +6,31 @@ class ExampleSection extends React.Component {
     element: React.PropTypes.node.isRequired
   }
 
+  static objectToString(obj) {
+    var string = '';
+
+    if (obj instanceof Object) {
+      string += '{';
+      Object.keys(obj).forEach((key, i) => {
+        if ((key === 'href') && (obj[key] === 'LINKIFY_MATCH')) {
+          return;
+        }
+
+        if (i !== 0) {
+          string += ', ';
+        }
+
+        string += `${key}: `;
+        string += ExampleSection.objectToString(obj[key]);
+      });
+      string += '}';
+    } else {
+      string += obj;
+    }
+    
+    return string;
+  }
+
   static renderToStaticMarkup(element) {
     var string = '';
 
@@ -15,7 +40,27 @@ class ExampleSection extends React.Component {
       var type = (typeof element.type === 'string') ? element.type : element.type.name;
 
       string += `<${type}`;
-      // props
+
+      // Props
+      var ignoreProps = ['children', 'urlRegex', 'emailRegex'];
+      Object.keys(element.props).forEach(key => {
+        if (ignoreProps.indexOf(key) !== -1) {
+          return;
+        } else if ((key === 'component') && (element.props[key] === 'a')) {
+          return;
+        } else if (key === 'properties') {
+          var propsString = ExampleSection.objectToString(element.props[key]);
+
+          if (propsString !== '{}') {
+            string += ` ${key}=${propsString}`;
+          }
+
+          return;
+        }
+
+        string += ` ${key}="${element.props[key]}"`;
+      });
+
       string += `>`;
       string += ExampleSection.renderToStaticMarkup(element.props.children);
       string += `</${type}>`;
