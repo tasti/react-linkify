@@ -54,7 +54,19 @@ class Content extends React.Component {
         </div>
       ),
       after: (
-        <Linkify properties={{style: {color: 'red', fontWeight: 'bold'}}}>
+        <Linkify properties={{target: '_blank', style: {color: 'red', fontWeight: 'bold'}}}>
+          See source code at https://github.com/tasti/react-linkify/.
+        </Linkify>
+      )
+    }, {
+      description: 'Selecting the component to wrap links',
+      before: (
+        <div>
+          See source code at https://github.com/tasti/react-linkify/.
+        </div>
+      ),
+      after: (
+        <Linkify component='button'>
           See source code at https://github.com/tasti/react-linkify/.
         </Linkify>
       )
@@ -74,7 +86,6 @@ class Content extends React.Component {
             />
           );
         })}
-        More coming soon!
       </div>
     );
   }

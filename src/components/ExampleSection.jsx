@@ -1,4 +1,4 @@
-import pretty from 'pretty';
+import {html as beautifyhtml} from 'js-beautify';
 import React from 'react';
 
 class ExampleSection extends React.Component {
@@ -25,7 +25,7 @@ class ExampleSection extends React.Component {
       });
       string += '}';
     } else {
-      string += obj;
+      string += `'${obj}'`;
     }
     
     return string;
@@ -52,13 +52,13 @@ class ExampleSection extends React.Component {
           var propsString = ExampleSection.objectToString(element.props[key]);
 
           if (propsString !== '{}') {
-            string += ` ${key}=${propsString}`;
+            string += ` ${key}={${propsString}}`;
           }
 
           return;
         }
 
-        string += ` ${key}="${element.props[key]}"`;
+        string += ` ${key}=\'${element.props[key]}\'`;
       });
 
       string += `>`;
@@ -77,7 +77,10 @@ class ExampleSection extends React.Component {
     return (
       <div className="ExampleSection">
         <pre style={{padding: '4px', background: 'lightgrey', borderRadius: '2px', wordWrap: 'break-word'}}>
-          {pretty((ExampleSection.renderToStaticMarkup(this.props.element)))}
+          {beautifyhtml(
+            ExampleSection.renderToStaticMarkup(this.props.element),
+            {indent_size: 2, unformatted: []}
+          )}
         </pre>
         <div>Renders to:</div>
         <div style={{padding: '4px', border: '1px solid lightgrey', borderRadius: '2px'}}>

@@ -20551,8 +20551,7 @@
 	            after: example.after,
 	            key: i
 	          });
-	        }),
-	        'More coming soon!'
+	        })
 	      );
 	    }
 	  }], [{
@@ -20653,7 +20652,19 @@
 	      ),
 	      after: _react2['default'].createElement(
 	        _reactLinkify2['default'],
-	        { properties: { style: { color: 'red', fontWeight: 'bold' } } },
+	        { properties: { target: '_blank', style: { color: 'red', fontWeight: 'bold' } } },
+	        'See source code at https://github.com/tasti/react-linkify/.'
+	      )
+	    }, {
+	      description: 'Selecting the component to wrap links',
+	      before: _react2['default'].createElement(
+	        'div',
+	        null,
+	        'See source code at https://github.com/tasti/react-linkify/.'
+	      ),
+	      after: _react2['default'].createElement(
+	        _reactLinkify2['default'],
+	        { component: 'button' },
 	        'See source code at https://github.com/tasti/react-linkify/.'
 	      )
 	    }],
@@ -20700,59 +20711,93 @@
 	  _inherits(Linkify, _React$Component);
 
 	  _createClass(Linkify, [{
+	    key: 'getMatch',
+	    value: function getMatch(string) {
+	      var urlIdx = string.search(this.props.urlRegex);
+	      var emailIdx = string.search(this.props.emailRegex);
+
+	      if (urlIdx === -1 && emailIdx === -1) {
+	        return false;
+	      }
+
+	      var idx = undefined,
+	          regex = undefined,
+	          type = undefined;
+	      if (urlIdx === -1) {
+	        idx = emailIdx;
+	        regex = this.props.emailRegex;
+	        type = 'email';
+	      } else if (emailIdx === -1) {
+	        idx = urlIdx;
+	        regex = this.props.urlRegex;
+	        type = 'url';
+	      } else if (urlIdx < emailIdx) {
+	        idx = urlIdx;
+	        regex = this.props.urlRegex;
+	        type = 'url';
+	      } else {
+	        // Email has precedence over url when equal
+	        idx = emailIdx;
+	        regex = this.props.emailRegex;
+	        type = 'email';
+	      }
+
+	      var str = string.match(regex)[0];
+
+	      return {
+	        str: str,
+	        type: type,
+	        idx: idx,
+	        len: str.length
+	      };
+	    }
+	  }, {
+	    key: 'formatLink',
+	    value: function formatLink(match) {
+	      if (match.type === 'email') {
+	        return 'mailto:' + match.str;
+	      } else if (match.type === 'url') {
+	        if (match.str.substring(0, 4).toLowerCase() === 'http') {
+	          return match.str;
+	        } else {
+	          return 'http://' + match.str;
+	        }
+	      }
+
+	      return match.str;
+	    }
+	  }, {
 	    key: 'parseStringHelper',
 	    value: function parseStringHelper(string, elements) {
 	      if (string === '') {
 	        return elements;
 	      }
 
-	      var urlIdx = string.search(this.props.urlRegex);
-	      var emailIdx = string.search(this.props.emailRegex);
-
-	      if (urlIdx === -1 && emailIdx === -1) {
+	      var match = this.getMatch(string);
+	      if (!match) {
 	        elements.push(string);
 	        return this.parseStringHelper('', elements);
 	      }
-	      var idx = undefined,
-	          regex = undefined;
-
-	      if (urlIdx === -1) {
-	        idx = emailIdx;
-	        regex = this.props.emailRegex;
-	      } else if (emailIdx === -1) {
-	        idx = urlIdx;
-	        regex = this.props.urlRegex;
-	      } else if (urlIdx < emailIdx) {
-	        idx = urlIdx;
-	        regex = this.props.urlRegex;
-	      } else {
-	        // Email has precedence over url when equal
-	        idx = emailIdx;
-	        regex = this.props.emailRegex;
-	      }
-
-	      var match = string.match(regex)[0];
-	      var len = match.length;
 
 	      // Push the preceding text if there is any
-	      if (idx > 0) {
-	        elements.push(string.substring(0, idx));
+	      if (match.idx > 0) {
+	        elements.push(string.substring(0, match.idx));
 	      }
 
 	      // Shallow update values that specified the match
-	      var props = { key: Linkify.uniqueKey() };
+	      var props = { href: this.formatLink(match), key: Linkify.uniqueKey() };
 	      for (var key in this.props.properties) {
 	        var val = this.props.properties[key];
 	        if (val === Linkify.MATCH) {
-	          val = idx === emailIdx ? 'mailto:' + match : match;
+	          val = this.formatLink(match);
 	        }
 
 	        props[key] = val;
 	      }
 
-	      elements.push(_react2['default'].createElement(this.props.component, props, match));
+	      elements.push(_react2['default'].createElement(this.props.component, props, match.str));
 
-	      return this.parseStringHelper(string.substring(idx + len), elements);
+	      return this.parseStringHelper(string.substring(match.idx + match.len), elements);
 	    }
 	  }, {
 	    key: 'parseString',
@@ -20819,7 +20864,7 @@
 	    key: 'defaultProps',
 	    value: {
 	      component: 'a',
-	      properties: { href: 'LINKIFY_MATCH' },
+	      properties: {},
 	      // TODO: Improve regexs
 	      urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
 	      emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
@@ -20942,9 +20987,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
-	var _pretty = __webpack_require__(162);
-
-	var _pretty2 = _interopRequireDefault(_pretty);
+	var _jsBeautify = __webpack_require__(162);
 
 	var _react = __webpack_require__(1);
 
@@ -20970,7 +21013,7 @@
 	        _react2['default'].createElement(
 	          'pre',
 	          { style: { padding: '4px', background: 'lightgrey', borderRadius: '2px', wordWrap: 'break-word' } },
-	          (0, _pretty2['default'])(ExampleSection.renderToStaticMarkup(this.props.element))
+	          (0, _jsBeautify.html)(ExampleSection.renderToStaticMarkup(this.props.element), { indent_size: 2, unformatted: [] })
 	        ),
 	        _react2['default'].createElement(
 	          'div',
@@ -21011,7 +21054,7 @@
 	        });
 	        string += '}';
 	      } else {
-	        string += obj;
+	        string += '\'' + obj + '\'';
 	      }
 
 	      return string;
@@ -21039,13 +21082,13 @@
 	            var propsString = ExampleSection.objectToString(element.props[key]);
 
 	            if (propsString !== '{}') {
-	              string += ' ' + key + '=' + propsString;
+	              string += ' ' + key + '={' + propsString + '}';
 	            }
 
 	            return;
 	          }
 
-	          string += ' ' + key + '="' + element.props[key] + '"';
+	          string += ' ' + key + '=\'' + element.props[key] + '\'';
 	        });
 
 	        string += '>';
@@ -21069,61 +21112,6 @@
 
 /***/ },
 /* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*!
-	 * pretty <https://github.com/jonschlinkert/pretty>
-	 *
-	 * Copyright (c) 2013-2015, Jon Schlinkert.
-	 * Licensed under the MIT license.
-	 */
-
-	'use strict';
-
-	var beautify = __webpack_require__(163);
-
-	module.exports = function pretty(str, options) {
-	  str = beautify.html(str, {
-	    indent_char: ' ',
-	    indent_size: 2,
-	    indent_inner_html: true,
-	    unformatted: ['code', 'pre', 'em', 'strong', 'span']
-	  });
-
-	  return ocd(str, options);
-	};
-
-	function ocd(str, options) {
-	  return str
-	    // Remove any empty lines at the top of a file.
-	    .replace(/^\s*/g, '')
-	    // Normalize and condense all newlines
-	    .replace(/(\r\n|\n){2,}/g, '\n')
-	    // fix multiline, Bootstrap-style comments
-	    .replace(/(\s*)(<!--.+)\s*(===.+)/g, '$1$2$1$3')
-	    // make <li><a></li> on one line, but only when li > a
-	    .replace(/(<li>)(\s*)(<a .+)(\s*)(<\/li>)/g, '$1 $3 $5')
-	    // make <a><span></a> on one line, but only when a > span
-	    .replace(/(<a.+)(\s*)(<span .+)(\s*)(<\/a>)/g, '$1 $3 $5')
-	    // Adjust spacing for button > span
-	    .replace(/(<button.+)(<span.+)(\s*)(<\/button>)/g, '$1$3  $2$3$4')
-	    // Adjust spacing for span > input
-	    .replace(/(\s*)(<span.+)(\s*)(<input.+)(\s*)(<\/span>)/g, '$1$2$1  $4$1$6')
-	    // Add a newline for tags nested inside <h1-6>
-	    .replace(/(\s*)(<h[0-6](?:.+)?>)(.*)(<(?:small|span|strong|em)(?:.+)?)(\s*)(<\/h[0-6]>)/g, '$1$2$3$1  $4$1$6')
-	    // Add a space above each comment
-	    .replace(/(\s*<!--)/g, '\n$1')
-	    // Fix conditional comments
-	    .replace(/( *)(<!--\[.+)(\s*)(.+\s*)?(.+\s*)?(<!\[endif\]-->)/g, '$1$2\n  $1$4$1$5$1$6')
-	    // Bring closing comments up to the same line as closing tag.
-	    .replace(/\s*(<!--\s*\/.+)/g, '$1')
-	    // Add a space after some inline elements, since prettifying strips them sometimes
-	    .replace(/(<\/(a|small|span|strong|em)>(?:(?!,)))/g, '$1 ');
-	}
-
-
-/***/ },
-/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -21164,9 +21152,9 @@
 	if (true) {
 	    // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
 	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [
+	        __webpack_require__(163),
 	        __webpack_require__(164),
-	        __webpack_require__(165),
-	        __webpack_require__(166)
+	        __webpack_require__(165)
 	    ], __WEBPACK_AMD_DEFINE_RESULT__ = function(js_beautify, css_beautify, html_beautify) {
 	        return get_beautify(js_beautify, css_beautify, html_beautify);
 	    }.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -21184,7 +21172,7 @@
 
 
 /***/ },
-/* 164 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
@@ -23192,7 +23180,7 @@
 
 
 /***/ },
-/* 165 */
+/* 164 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
@@ -23667,7 +23655,7 @@
 
 
 /***/ },
-/* 166 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*jshint curly:true, eqeqeq:true, laxbreak:true, noempty:false */
@@ -24561,9 +24549,9 @@
 
 	    if (true) {
 	        // Add support for AMD ( https://github.com/amdjs/amdjs-api/wiki/AMD#defineamd-property- )
-	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, __webpack_require__(164), __webpack_require__(165)], __WEBPACK_AMD_DEFINE_RESULT__ = function(requireamd) {
-	            var js_beautify =  __webpack_require__(164);
-	            var css_beautify =  __webpack_require__(165);
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, __webpack_require__(163), __webpack_require__(164)], __WEBPACK_AMD_DEFINE_RESULT__ = function(requireamd) {
+	            var js_beautify =  __webpack_require__(163);
+	            var css_beautify =  __webpack_require__(164);
 
 	            return {
 	              html_beautify: function(html_source, options) {
