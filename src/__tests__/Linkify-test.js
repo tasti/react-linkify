@@ -126,11 +126,6 @@ describe('Linkify', () => {
   });
 
   describe('#static', () => {
-    let Linkify = require('../Linkify.jsx');
-
-    // Issue with ES6 not allowing use of a static variable inside another
-    it('should contain the same string', () => {
-      expect(Linkify.defaultProps.properties.href).toEqual(Linkify.MATCH);
-    });
+    //let Linkify = require('../Linkify.jsx');
   });
 });

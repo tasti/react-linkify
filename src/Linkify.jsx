@@ -17,10 +17,61 @@ class Linkify extends React.Component {
 
   static defaultProps = {
     component: 'a',
-    properties: {href: 'LINKIFY_MATCH'},
+    properties: {},
     // TODO: Improve regexs
     urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
     emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
+  }
+
+  getMatch(string) {
+    let urlIdx = string.search(this.props.urlRegex);
+    let emailIdx = string.search(this.props.emailRegex);
+
+    if ((urlIdx === -1) && (emailIdx === -1)) {
+      return false;
+    }
+
+    let idx, regex, type;
+    if (urlIdx === -1) {
+      idx = emailIdx;
+      regex = this.props.emailRegex;
+      type = 'email';
+    } else if (emailIdx === -1) {
+      idx = urlIdx;
+      regex = this.props.urlRegex;
+      type = 'url';
+    } else if (urlIdx < emailIdx) {
+      idx = urlIdx;
+      regex = this.props.urlRegex;
+      type = 'url';
+    } else { // Email has precedence over url when equal
+      idx = emailIdx;
+      regex = this.props.emailRegex;
+      type = 'email';
+    }
+
+    var str = string.match(regex)[0];
+
+    return {
+      str: str,
+      type: type,
+      idx: idx,
+      len: str.length
+    }
+  }
+
+  formatLink(match) {
+    if (match.type === 'email') {
+      return `mailto:${match.str}`;
+    } else if (match.type === 'url') {
+      if (match.str.substring(0, 4).toLowerCase() === 'http') {
+        return match.str;
+      } else {
+        return `http://${match.str}`;
+      }
+    }
+
+    return match.str;
   }
 
   parseStringHelper(string, elements) {
@@ -28,48 +79,23 @@ class Linkify extends React.Component {
       return elements;
     }
 
-    let urlIdx = string.search(this.props.urlRegex);
-    let emailIdx = string.search(this.props.emailRegex);
-
-    if ((urlIdx === -1) && (emailIdx === -1)) {
+    let match = this.getMatch(string);
+    if (!match) {
       elements.push(string);
       return this.parseStringHelper('', elements);
     }
 
-    let idx, regex;
-
-    if (urlIdx === -1) {
-      idx = emailIdx;
-      regex = this.props.emailRegex;
-    } else if (emailIdx === -1) {
-      idx = urlIdx;
-      regex = this.props.urlRegex;
-    } else if (urlIdx < emailIdx) {
-      idx = urlIdx;
-      regex = this.props.urlRegex;
-    } else { // Email has precedence over url when equal
-      idx = emailIdx;
-      regex = this.props.emailRegex;
-    }
-
-    let match = string.match(regex)[0];
-    let len = match.length;
-
     // Push the preceding text if there is any
-    if (idx > 0) {
-      elements.push(string.substring(0, idx));
+    if (match.idx > 0) {
+      elements.push(string.substring(0, match.idx));
     }
 
     // Shallow update values that specified the match
-    let props = {key: Linkify.uniqueKey()};
+    let props = {href: this.formatLink(match), key: Linkify.uniqueKey()};
     for (let key in this.props.properties) {
       let val = this.props.properties[key];
       if (val === Linkify.MATCH) {
-        if (idx === emailIdx) {
-          val = `mailto:${match}`;
-        } else if (idx === urlIdx) {
-          val = (match.substring(0, 4).toLowerCase() === 'http') ? match : `http://${match}`;
-        }
+        val = this.formatLink(match);
       }
 
       props[key] = val;
@@ -78,10 +104,10 @@ class Linkify extends React.Component {
     elements.push(React.createElement(
       this.props.component,
       props,
-      match
+      match.str
     ));
 
-    return this.parseStringHelper(string.substring(idx + len), elements);
+    return this.parseStringHelper(string.substring(match.idx + match.len), elements);
   }
 
   parseString(string) {

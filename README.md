@@ -65,9 +65,9 @@ _default:_ `'a'`
 **properties**  
 The props that will be added to every matched component.  
 _type:_ `object`  
-_default:_ `{href: Linkify.MATCH}`
+_default:_ `{}`
 
-NOTE: Use `Linkify.MATCH` as a value to specify the matched link.
+NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
 
 **urlRegex**  
 The regular expression used to identify url links.  
