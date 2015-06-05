@@ -66,7 +66,7 @@ class Content extends React.Component {
         </div>
       ),
       after: (
-        <Linkify component='button'>
+        <Linkify component='button' properties={{onClick: () => {alert('Success!')}}}>
           See source code at https://github.com/tasti/react-linkify/.
         </Linkify>
       )

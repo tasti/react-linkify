@@ -9,7 +9,9 @@ class ExampleSection extends React.Component {
   static objectToString(obj) {
     var string = '';
 
-    if (obj instanceof Object) {
+    if (obj instanceof Function) {
+      string += obj;
+    } else if (obj instanceof Object) {
       string += '{';
       Object.keys(obj).forEach((key, i) => {
         if ((key === 'href') && (obj[key] === 'LINKIFY_MATCH')) {
@@ -61,9 +63,9 @@ class ExampleSection extends React.Component {
         string += ` ${key}=\'${element.props[key]}\'`;
       });
 
-      string += `>`;
+      string += `>\n`;
       string += ExampleSection.renderToStaticMarkup(element.props.children);
-      string += `</${type}>`;
+      string += `\n</${type}>`;
     } else if (element instanceof Array) {
       return element.map(el => {
         return ExampleSection.renderToStaticMarkup(el);
@@ -83,7 +85,7 @@ class ExampleSection extends React.Component {
           )}
         </pre>
         <div>Renders to:</div>
-        <div style={{padding: '4px', border: '1px solid lightgrey', borderRadius: '2px'}}>
+        <div style={{marginTop: '10px', padding: '4px', border: '1px solid lightgrey', borderRadius: '2px'}}>
           {this.props.element}
         </div>
       </div>

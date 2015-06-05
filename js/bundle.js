@@ -20475,7 +20475,7 @@
 	    value: function render() {
 	      return _react2['default'].createElement(
 	        'div',
-	        { className: 'App' },
+	        { className: 'App', style: { fontFamily: 'Verdana' } },
 	        _react2['default'].createElement(
 	          'div',
 	          { className: 'Title', style: { fontSize: '48px', fontWeight: 'bold' } },
@@ -20664,7 +20664,9 @@
 	      ),
 	      after: _react2['default'].createElement(
 	        _reactLinkify2['default'],
-	        { component: 'button' },
+	        { component: 'button', properties: { onClick: function onClick() {
+	              alert('Success!');
+	            } } },
 	        'See source code at https://github.com/tasti/react-linkify/.'
 	      )
 	    }],
@@ -20706,6 +20708,8 @@
 	    if (_React$Component != null) {
 	      _React$Component.apply(this, arguments);
 	    }
+
+	    this.matchings = [{ type: 'email', regex: this.props.emailRegex }, { type: 'url', regex: this.props.urlRegex }];
 	  }
 
 	  _inherits(Linkify, _React$Component);
@@ -20713,43 +20717,23 @@
 	  _createClass(Linkify, [{
 	    key: 'getMatch',
 	    value: function getMatch(string) {
-	      var urlIdx = string.search(this.props.urlRegex);
-	      var emailIdx = string.search(this.props.emailRegex);
+	      for (var i = 0; i < this.matchings.length; ++i) {
+	        var matching = this.matchings[i];
+	        var idx = string.search(matching.regex);
 
-	      if (urlIdx === -1 && emailIdx === -1) {
-	        return false;
+	        if (idx !== -1) {
+	          var str = string.match(matching.regex)[0];
+
+	          return {
+	            str: str,
+	            type: matching.type,
+	            idx: idx,
+	            len: str.length
+	          };
+	        }
 	      }
 
-	      var idx = undefined,
-	          regex = undefined,
-	          type = undefined;
-	      if (urlIdx === -1) {
-	        idx = emailIdx;
-	        regex = this.props.emailRegex;
-	        type = 'email';
-	      } else if (emailIdx === -1) {
-	        idx = urlIdx;
-	        regex = this.props.urlRegex;
-	        type = 'url';
-	      } else if (urlIdx < emailIdx) {
-	        idx = urlIdx;
-	        regex = this.props.urlRegex;
-	        type = 'url';
-	      } else {
-	        // Email has precedence over url when equal
-	        idx = emailIdx;
-	        regex = this.props.emailRegex;
-	        type = 'email';
-	      }
-
-	      var str = string.match(regex)[0];
-
-	      return {
-	        str: str,
-	        type: type,
-	        idx: idx,
-	        len: str.length
-	      };
+	      return false;
 	    }
 	  }, {
 	    key: 'formatLink',
@@ -20814,7 +20798,9 @@
 	      var _this = this;
 
 	      var parsed = children;
-
+	if (_react2['default'].isValidElement(children)){
+	  console.log(children);
+	}
 	      if (typeof children === 'string') {
 	        parsed = this.parseString(children);
 	      } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
@@ -20877,6 +20863,8 @@
 
 	exports['default'] = Linkify;
 	module.exports = exports['default'];
+
+	// In order of precedence, for when regexs overlap
 
 
 /***/ },
@@ -21022,7 +21010,7 @@
 	        ),
 	        _react2['default'].createElement(
 	          'div',
-	          { style: { padding: '4px', border: '1px solid lightgrey', borderRadius: '2px' } },
+	          { style: { marginTop: '10px', padding: '4px', border: '1px solid lightgrey', borderRadius: '2px' } },
 	          this.props.element
 	        )
 	      );
@@ -21038,7 +21026,9 @@
 	    value: function objectToString(obj) {
 	      var string = '';
 
-	      if (obj instanceof Object) {
+	      if (obj instanceof Function) {
+	        string += obj;
+	      } else if (obj instanceof Object) {
 	        string += '{';
 	        Object.keys(obj).forEach(function (key, i) {
 	          if (key === 'href' && obj[key] === 'LINKIFY_MATCH') {
@@ -21091,9 +21081,9 @@
 	          string += ' ' + key + '=\'' + element.props[key] + '\'';
 	        });
 
-	        string += '>';
+	        string += '>\n';
 	        string += ExampleSection.renderToStaticMarkup(element.props.children);
-	        string += '</' + type + '>';
+	        string += '\n</' + type + '>';
 	      } else if (element instanceof Array) {
 	        return element.map(function (el) {
 	          return ExampleSection.renderToStaticMarkup(el);
