@@ -23,41 +23,30 @@ class Linkify extends React.Component {
     emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
   }
 
+  // In order of precedence, for when regexs overlap
+  matchings = [
+    {type: 'email', regex: this.props.emailRegex},
+    {type: 'url', regex: this.props.urlRegex}
+  ]
+
   getMatch(string) {
-    let urlIdx = string.search(this.props.urlRegex);
-    let emailIdx = string.search(this.props.emailRegex);
+    for (let i = 0; i < this.matchings.length; ++i) {
+      const matching = this.matchings[i];
+      const idx = string.search(matching.regex);
+      
+      if (idx !== -1) {
+        const str = string.match(matching.regex)[0];
 
-    if ((urlIdx === -1) && (emailIdx === -1)) {
-      return false;
+        return {
+          str: str,
+          type: matching.type,
+          idx: idx,
+          len: str.length
+        }
+      }
     }
 
-    let idx, regex, type;
-    if (urlIdx === -1) {
-      idx = emailIdx;
-      regex = this.props.emailRegex;
-      type = 'email';
-    } else if (emailIdx === -1) {
-      idx = urlIdx;
-      regex = this.props.urlRegex;
-      type = 'url';
-    } else if (urlIdx < emailIdx) {
-      idx = urlIdx;
-      regex = this.props.urlRegex;
-      type = 'url';
-    } else { // Email has precedence over url when equal
-      idx = emailIdx;
-      regex = this.props.emailRegex;
-      type = 'email';
-    }
-
-    var str = string.match(regex)[0];
-
-    return {
-      str: str,
-      type: type,
-      idx: idx,
-      len: str.length
-    }
+    return false;
   }
 
   formatLink(match) {
@@ -79,7 +68,7 @@ class Linkify extends React.Component {
       return elements;
     }
 
-    let match = this.getMatch(string);
+    const match = this.getMatch(string);
     if (!match) {
       elements.push(string);
       return this.parseStringHelper('', elements);
@@ -139,7 +128,7 @@ class Linkify extends React.Component {
   }
 
   render() {
-    let parsedChildren = this.parse(this.props.children);
+    const parsedChildren = this.parse(this.props.children);
 
     return <span className="Linkify">{parsedChildren}</span>;
   }

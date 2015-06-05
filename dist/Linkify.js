@@ -23,6 +23,8 @@ var Linkify = (function (_React$Component) {
     if (_React$Component != null) {
       _React$Component.apply(this, arguments);
     }
+
+    this.matchings = [{ type: 'email', regex: this.props.emailRegex }, { type: 'url', regex: this.props.urlRegex }];
   }
 
   _inherits(Linkify, _React$Component);
@@ -30,43 +32,23 @@ var Linkify = (function (_React$Component) {
   _createClass(Linkify, [{
     key: 'getMatch',
     value: function getMatch(string) {
-      var urlIdx = string.search(this.props.urlRegex);
-      var emailIdx = string.search(this.props.emailRegex);
+      for (var i = 0; i < this.matchings.length; ++i) {
+        var matching = this.matchings[i];
+        var idx = string.search(matching.regex);
 
-      if (urlIdx === -1 && emailIdx === -1) {
-        return false;
+        if (idx !== -1) {
+          var str = string.match(matching.regex)[0];
+
+          return {
+            str: str,
+            type: matching.type,
+            idx: idx,
+            len: str.length
+          };
+        }
       }
 
-      var idx = undefined,
-          regex = undefined,
-          type = undefined;
-      if (urlIdx === -1) {
-        idx = emailIdx;
-        regex = this.props.emailRegex;
-        type = 'email';
-      } else if (emailIdx === -1) {
-        idx = urlIdx;
-        regex = this.props.urlRegex;
-        type = 'url';
-      } else if (urlIdx < emailIdx) {
-        idx = urlIdx;
-        regex = this.props.urlRegex;
-        type = 'url';
-      } else {
-        // Email has precedence over url when equal
-        idx = emailIdx;
-        regex = this.props.emailRegex;
-        type = 'email';
-      }
-
-      var str = string.match(regex)[0];
-
-      return {
-        str: str,
-        type: type,
-        idx: idx,
-        len: str.length
-      };
+      return false;
     }
   }, {
     key: 'formatLink',
@@ -194,3 +176,5 @@ var Linkify = (function (_React$Component) {
 
 exports['default'] = Linkify;
 module.exports = exports['default'];
+
+// In order of precedence, for when regexs overlap
