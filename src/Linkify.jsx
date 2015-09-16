@@ -1,4 +1,9 @@
 import React from 'react';
+import LinkifyIt from 'linkify-it';
+import tlds from 'tlds';
+
+const linkify = new LinkifyIt();
+linkify.tlds(tlds);
 
 class Linkify extends React.Component {
   static MATCH = 'LINKIFY_MATCH'
@@ -18,91 +23,50 @@ class Linkify extends React.Component {
   static defaultProps = {
     component: 'a',
     properties: {},
-    // TODO: Improve regexs
-    urlRegex: /\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i,
-    emailRegex: /\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i
   }
 
-  // In order of precedence, for when regexs overlap
-  matchings = [
-    {type: 'email', regex: this.props.emailRegex},
-    {type: 'url', regex: this.props.urlRegex}
-  ]
-
-  getMatch(string) {
-    for (let i = 0; i < this.matchings.length; ++i) {
-      const matching = this.matchings[i];
-      const idx = string.search(matching.regex);
-      
-      if (idx !== -1) {
-        const str = string.match(matching.regex)[0];
-
-        return {
-          str: str,
-          type: matching.type,
-          idx: idx,
-          len: str.length
-        }
-      }
-    }
-
-    return false;
-  }
-
-  formatLink(match) {
-    if (match.type === 'email') {
-      return `mailto:${match.str}`;
-    } else if (match.type === 'url') {
-      if (match.str.substring(0, 4).toLowerCase() === 'http') {
-        return match.str;
-      } else {
-        return `http://${match.str}`;
-      }
-    }
-
-    return match.str;
-  }
-
-  parseStringHelper(string, elements) {
-    if (string === '') {
-      return elements;
-    }
-
-    const match = this.getMatch(string);
-    if (!match) {
-      elements.push(string);
-      return this.parseStringHelper('', elements);
-    }
-
-    // Push the preceding text if there is any
-    if (match.idx > 0) {
-      elements.push(string.substring(0, match.idx));
-    }
-
-    // Shallow update values that specified the match
-    let props = {href: this.formatLink(match), key: Linkify.uniqueKey()};
-    for (let key in this.props.properties) {
-      let val = this.props.properties[key];
-      if (val === Linkify.MATCH) {
-        val = this.formatLink(match);
-      }
-
-      props[key] = val;
-    }
-
-    elements.push(React.createElement(
-      this.props.component,
-      props,
-      match.str
-    ));
-
-    return this.parseStringHelper(string.substring(match.idx + match.len), elements);
+  getMatches(string) {
+    return linkify.match(string);
   }
 
   parseString(string) {
     let elements = [];
+    if (string === '') {
+      return elements;
+    }
 
-    this.parseStringHelper(string, elements);
+    const matches = this.getMatches(string);
+    if (!matches) {
+      return string;
+    }
+
+    let lastIndex = 0;
+    for (let match of matches) {
+      // Push the preceding text if there is any
+      if (match.index > lastIndex) {
+        elements.push(string.substring(lastIndex, match.index));
+      }
+      // Shallow update values that specified the match
+      let props = {href: match.url, key: Linkify.uniqueKey()};
+      for (let key in this.props.properties) {
+        let val = this.props.properties[key];
+        if (val === Linkify.MATCH) {
+          val = match.url;
+        }
+
+        props[key] = val;
+      }
+      elements.push(React.createElement(
+        this.props.component,
+        props,
+        match.text
+      ));
+      lastIndex = match.lastIndex;
+    }
+
+    if (lastIndex !== string) {
+      elements.push(string.substring(lastIndex));
+    }
 
     return (elements.length === 1) ? elements[0] : elements;
   }
