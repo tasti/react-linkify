@@ -69,23 +69,8 @@ _default:_ `{}`
 
 NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
 
-**urlRegex**  
-The regular expression used to identify url links.  
-_type:_ `object`  
-_default:_ `/\b(?:(?:https):\/\/|[-A-Z0-9+&@#/%=~_|$?!:,.]+\.)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i`
+## Examples
 
-**emailRegex**  
-The regular expression used to identify email links.  
-_type:_ `object`  
-_default:_ `/\b[-A-Z0-9+&%=~_|$!.]+@[-A-Z0-9+&%=~_|$!.]+\.[-A-Z0-9+&%=~_|$!]+/i`
-
-Some of the cases the default regex handles (link inside code block):
-- `github.com`
-- `www.google.com`
-- `http://www.zakarie.com`
-- `https://www.facebook.com`
-- "`www.google.com:8080`"
-- `http://en.wikipedia.org/wiki/React_(JavaScript_library)`
-- Examples are available at `http://tasti.github.io/react-linkify/`.
-- `tasti@zakarie.com`
-- For more information, contact `tasti@zakarie.com`.
+All kind of links detectable by
+[linkify-it](https://github.com/markdown-it/linkify-it) are supported. For
+examples, visit [their website](http://markdown-it.github.io/linkify-it/).
