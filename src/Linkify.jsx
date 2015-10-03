@@ -3,7 +3,32 @@ import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
 
 const linkify = new LinkifyIt();
-linkify.tlds(tlds);
+linkify
+  .tlds(tlds)
+  .set({ fuzzyLink: false })
+  .add('@', {
+    validate: function (text, pos, self) {
+      var tail = text.slice(pos);
+
+      if (!self.re.imgurUser) {
+        self.re.imgurUser =  new RegExp(
+          '^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')'
+        );
+      }
+      if (self.re.imgurUser.test(tail)) {
+        // Linkifier allows punctuation chars before prefix,
+        // but we additionally disable `@` ("@@mention" is invalid)
+        if (pos >= 2 && tail[pos - 2] === '@') {
+          return false;
+        }
+        return tail.match(self.re.imgurUser)[0].length;
+      }
+      return 0;
+    },
+    normalize: function (match) {
+      match.url = '//imgur.com/user/' + match.url.replace(/^@/, '');
+    }
+  });
 
 class Linkify extends React.Component {
   static MATCH = 'LINKIFY_MATCH'
