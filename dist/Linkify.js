@@ -27,7 +27,27 @@ var _tlds = require('tlds');
 var _tlds2 = _interopRequireDefault(_tlds);
 
 var linkify = new _linkifyIt2['default']();
-linkify.tlds(_tlds2['default']);
+linkify.tlds(_tlds2['default']).set({ fuzzyLink: false }).add('@', {
+  validate: function validate(text, pos, self) {
+    var tail = text.slice(pos);
+
+    if (!self.re.imgurUser) {
+      self.re.imgurUser = new RegExp('^([a-zA-Z0-9_]){1,15}(?!_)(?=$|' + self.re.src_ZPCc + ')');
+    }
+    if (self.re.imgurUser.test(tail)) {
+      // Linkifier allows punctuation chars before prefix,
+      // but we additionally disable `@` ("@@mention" is invalid)
+      if (pos >= 2 && tail[pos - 2] === '@') {
+        return false;
+      }
+      return tail.match(self.re.imgurUser)[0].length;
+    }
+    return 0;
+  },
+  normalize: function normalize(match) {
+    match.url = '//imgur.com/user/' + match.url.replace(/^@/, '');
+  }
+});
 
 var Linkify = (function (_React$Component) {
   _inherits(Linkify, _React$Component);
