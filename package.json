@@ -27,16 +27,13 @@
     "test": "BABEL_JEST_STAGE=0 jest"
   },
   "devDependencies": {
-    "babel-jest": "~5.2.0",
+    "babel-jest": "~5.3.0",
     "jest": "^0.1.40",
-    "jest-cli": "~0.4.5",
+    "jest-cli": "~0.7.1",
     "react": "~0.13.3",
     "react-tools": "~0.13.3"
   },
   "jest": {
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
-    ],
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest"
   },
   "dependencies": {
