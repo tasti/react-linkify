@@ -62,7 +62,7 @@ class Linkify extends React.Component {
       lastIndex = match.lastIndex;
     }
 
-    if (lastIndex !== string) {
+    if (lastIndex < string.length) {
       elements.push(string.substring(lastIndex));
     }
 
