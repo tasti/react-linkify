@@ -1,6 +1,6 @@
 {
   "name": "react-linkify",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "React component to parse links (urls, emails, etc.) in text into clickable links",
   "homepage": "http://tasti.github.io/react-linkify/",
   "author": "Tasti Zakarie",
