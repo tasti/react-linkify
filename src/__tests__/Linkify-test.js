@@ -1,7 +1,7 @@
 jest.autoMockOff();
 
-let React = require('react/addons');
-let TestUtils = React.addons.TestUtils;
+let React = require('react');
+let TestUtils = require('react-addons-test-utils');
 
 describe('Linkify', () => {
   let Linkify = require('../Linkify.jsx');

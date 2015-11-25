@@ -30,8 +30,8 @@
     "babel-jest": "~5.3.0",
     "jest": "^0.1.40",
     "jest-cli": "~0.7.1",
-    "react": "~0.13.3",
-    "react-tools": "~0.13.3"
+    "react": "~0.14.2",
+    "react-addons-test-utils": "~0.14.2"
   },
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest"
