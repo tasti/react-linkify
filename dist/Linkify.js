@@ -6,13 +6,11 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
 
 var _react = require('react');
 
@@ -30,13 +28,17 @@ var linkify = new _linkifyIt2['default']();
 linkify.tlds(_tlds2['default']);
 
 var Linkify = (function (_React$Component) {
-  _inherits(Linkify, _React$Component);
-
   function Linkify() {
     _classCallCheck(this, Linkify);
 
-    _get(Object.getPrototypeOf(Linkify.prototype), 'constructor', this).apply(this, arguments);
+    if (_React$Component != null) {
+      _React$Component.apply(this, arguments);
+    }
+
+    this.parseCounter = 0;
   }
+
+  _inherits(Linkify, _React$Component);
 
   _createClass(Linkify, [{
     key: 'getMatches',
@@ -57,6 +59,7 @@ var Linkify = (function (_React$Component) {
       }
 
       var lastIndex = 0;
+      var idx = 0;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -70,7 +73,7 @@ var Linkify = (function (_React$Component) {
             elements.push(string.substring(lastIndex, match.index));
           }
           // Shallow update values that specified the match
-          var props = { href: match.url, key: Linkify.uniqueKey() };
+          var props = { href: match.url, key: 'match' + ++idx };
           for (var key in this.props.properties) {
             var val = this.props.properties[key];
             if (val === Linkify.MATCH) {
@@ -97,7 +100,7 @@ var Linkify = (function (_React$Component) {
         }
       }
 
-      if (lastIndex !== string) {
+      if (lastIndex < string.length) {
         elements.push(string.substring(lastIndex));
       }
 
@@ -113,7 +116,7 @@ var Linkify = (function (_React$Component) {
       if (typeof children === 'string') {
         parsed = this.parseString(children);
       } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
-        parsed = _react2['default'].cloneElement(children, { key: Linkify.uniqueKey() }, this.parse(children.props.children));
+        parsed = _react2['default'].cloneElement(children, { key: 'parse' + ++this.parseCounter }, this.parse(children.props.children));
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
           return _this.parse(child);
@@ -125,6 +128,7 @@ var Linkify = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      this.parseCounter = 0;
       var parsedChildren = this.parse(this.props.children);
 
       return _react2['default'].createElement(
@@ -134,17 +138,8 @@ var Linkify = (function (_React$Component) {
       );
     }
   }], [{
-    key: 'uniqueKey',
-    value: function uniqueKey() {
-      return 'LINKIFY_KEY_' + ++Linkify.keyCounter;
-    }
-  }, {
     key: 'MATCH',
     value: 'LINKIFY_MATCH',
-    enumerable: true
-  }, {
-    key: 'keyCounter',
-    value: 0,
     enumerable: true
   }, {
     key: 'propTypes',
@@ -159,8 +154,7 @@ var Linkify = (function (_React$Component) {
     key: 'defaultProps',
     value: {
       component: 'a',
-      properties: {}
-    },
+      properties: {} },
     enumerable: true
   }]);
 
