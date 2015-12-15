@@ -77,44 +77,24 @@ var Linkify = (function (_React$Component) {
       }
 
       var lastIndex = 0;
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = matches[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var match = _step.value;
-
-          // Push the preceding text if there is any
-          if (match.index > lastIndex) {
-            elements.push(string.substring(lastIndex, match.index));
-          }
-          // Shallow update values that specified the match
-          var props = { href: match.url, key: Linkify.uniqueKey() };
-          for (var key in this.props.properties) {
-            var val = this.props.properties[key];
-            if (val === Linkify.MATCH) {
-              val = match.url;
-            }
-
-            props[key] = val;
-          }
-          elements.push(_react2['default'].createElement(this.props.component, props, match.text));
-          lastIndex = match.lastIndex;
+      for (var i = 0; i < matches.length; i++) {
+        var match = matches[i];
+        // Push the preceding text if there is any
+        if (match.index > lastIndex) {
+          elements.push(string.substring(lastIndex, match.index));
         }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator['return']) {
-            _iterator['return']();
+        // Shallow update values that specified the match
+        var props = { href: match.url, key: Linkify.uniqueKey() };
+        for (var key in this.props.properties) {
+          var val = this.props.properties[key];
+          if (val === Linkify.MATCH) {
+            val = match.url;
           }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
+
+          props[key] = val;
         }
+        elements.push(_react2['default'].createElement(this.props.component, props, match.text));
+        lastIndex = match.lastIndex;
       }
 
       if (lastIndex !== string) {
