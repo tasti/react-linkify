@@ -66,7 +66,8 @@ class Linkify extends React.Component {
     }
 
     let lastIndex = 0;
-    for (let match of matches) {
+    for (let i = 0; i < matches.length; i++) {
+      let match = matches[i];
       // Push the preceding text if there is any
       if (match.index > lastIndex) {
         elements.push(string.substring(lastIndex, match.index));
