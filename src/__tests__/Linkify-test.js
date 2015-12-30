@@ -1,11 +1,11 @@
-jest.dontMock('../Linkify.jsx');
+jest.autoMockOff();
 
-let React = require('react/addons');
-let TestUtils = React.addons.TestUtils;
+let React = require('react');
+let TestUtils = require('react-addons-test-utils');
 
 describe('Linkify', () => {
   let Linkify = require('../Linkify.jsx');
-  
+
   describe('#parseString', () => {
     let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
 
@@ -80,7 +80,7 @@ describe('Linkify', () => {
 
   describe('#parse', () => {
     let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
-    
+
     it('should not parse <a> elements', () => {
       let input = (
         <a href="http://facebook.github.io/react/">
@@ -122,7 +122,7 @@ describe('Linkify', () => {
   });
 
   describe('#render', () => {
-  
+
   });
 
   describe('#static', () => {

@@ -33,11 +33,6 @@ linkify
 class Linkify extends React.Component {
   static MATCH = 'LINKIFY_MATCH'
 
-  static keyCounter = 0
-  static uniqueKey() {
-    return `LINKIFY_KEY_${++Linkify.keyCounter}`;
-  }
-
   static propTypes = {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
@@ -49,6 +44,8 @@ class Linkify extends React.Component {
     component: 'a',
     properties: {},
   }
+
+  parseCounter = 0
 
   getMatches(string) {
     return linkify.match(string);
@@ -66,14 +63,15 @@ class Linkify extends React.Component {
     }
 
     let lastIndex = 0;
+    let idx = 0;
     for (let i = 0; i < matches.length; i++) {
       let match = matches[i];
-      // Push the preceding text if there is any
+      // Push the preceding text if there is any.
       if (match.index > lastIndex) {
         elements.push(string.substring(lastIndex, match.index));
       }
-      // Shallow update values that specified the match
-      let props = {href: match.url, key: Linkify.uniqueKey()};
+      // Shallow update values that specified the match.
+      let props = {href: match.url, key: `match${++idx}`};
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {
@@ -90,7 +88,7 @@ class Linkify extends React.Component {
       lastIndex = match.lastIndex;
     }
 
-    if (lastIndex !== string) {
+    if (lastIndex < string.length) {
       elements.push(string.substring(lastIndex));
     }
 
@@ -105,7 +103,7 @@ class Linkify extends React.Component {
     } else if (React.isValidElement(children) && (children.type !== 'a') && (children.type !== 'button')) {
       parsed = React.cloneElement(
         children,
-        {key: Linkify.uniqueKey()},
+        {key: `parse${++this.parseCounter}`},
         this.parse(children.props.children)
       );
     } else if (children instanceof Array) {
@@ -118,6 +116,7 @@ class Linkify extends React.Component {
   }
 
   render() {
+    this.parseCounter = 0;
     const parsedChildren = this.parse(this.props.children);
 
     return <span className="Linkify">{parsedChildren}</span>;

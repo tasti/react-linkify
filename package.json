@@ -1,6 +1,6 @@
 {
   "name": "react-linkify",
-  "version": "0.0.6",
+  "version": "0.1.1",
   "description": "React component to parse links (urls, emails, etc.) in text into clickable links",
   "homepage": "http://tasti.github.io/react-linkify/",
   "author": "Tasti Zakarie",
@@ -27,16 +27,13 @@
     "test": "BABEL_JEST_STAGE=0 jest"
   },
   "devDependencies": {
-    "babel-jest": "~5.2.0",
+    "babel-jest": "~5.3.0",
     "jest": "^0.1.40",
-    "jest-cli": "~0.4.5",
-    "react": "~0.13.3",
-    "react-tools": "~0.13.3"
+    "jest-cli": "~0.7.1",
+    "react": "~0.14.2",
+    "react-addons-test-utils": "~0.14.2"
   },
   "jest": {
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react"
-    ],
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest"
   },
   "dependencies": {

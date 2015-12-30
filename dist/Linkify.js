@@ -56,6 +56,8 @@ var Linkify = (function (_React$Component) {
     _classCallCheck(this, Linkify);
 
     _get(Object.getPrototypeOf(Linkify.prototype), 'constructor', this).apply(this, arguments);
+
+    this.parseCounter = 0;
   }
 
   _createClass(Linkify, [{
@@ -77,14 +79,15 @@ var Linkify = (function (_React$Component) {
       }
 
       var lastIndex = 0;
+      var idx = 0;
       for (var i = 0; i < matches.length; i++) {
         var match = matches[i];
-        // Push the preceding text if there is any
+        // Push the preceding text if there is any.
         if (match.index > lastIndex) {
           elements.push(string.substring(lastIndex, match.index));
         }
-        // Shallow update values that specified the match
-        var props = { href: match.url, key: Linkify.uniqueKey() };
+        // Shallow update values that specified the match.
+        var props = { href: match.url, key: 'match' + ++idx };
         for (var key in this.props.properties) {
           var val = this.props.properties[key];
           if (val === Linkify.MATCH) {
@@ -97,7 +100,7 @@ var Linkify = (function (_React$Component) {
         lastIndex = match.lastIndex;
       }
 
-      if (lastIndex !== string) {
+      if (lastIndex < string.length) {
         elements.push(string.substring(lastIndex));
       }
 
@@ -113,7 +116,7 @@ var Linkify = (function (_React$Component) {
       if (typeof children === 'string') {
         parsed = this.parseString(children);
       } else if (_react2['default'].isValidElement(children) && children.type !== 'a' && children.type !== 'button') {
-        parsed = _react2['default'].cloneElement(children, { key: Linkify.uniqueKey() }, this.parse(children.props.children));
+        parsed = _react2['default'].cloneElement(children, { key: 'parse' + ++this.parseCounter }, this.parse(children.props.children));
       } else if (children instanceof Array) {
         parsed = children.map(function (child) {
           return _this.parse(child);
@@ -125,6 +128,7 @@ var Linkify = (function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
+      this.parseCounter = 0;
       var parsedChildren = this.parse(this.props.children);
 
       return _react2['default'].createElement(
@@ -134,17 +138,8 @@ var Linkify = (function (_React$Component) {
       );
     }
   }], [{
-    key: 'uniqueKey',
-    value: function uniqueKey() {
-      return 'LINKIFY_KEY_' + ++Linkify.keyCounter;
-    }
-  }, {
     key: 'MATCH',
     value: 'LINKIFY_MATCH',
-    enumerable: true
-  }, {
-    key: 'keyCounter',
-    value: 0,
     enumerable: true
   }, {
     key: 'propTypes',
