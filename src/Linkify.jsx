@@ -38,14 +38,13 @@ class Linkify extends React.Component {
     }
 
     let lastIndex = 0;
-    let idx = 0;
-    for (let match of matches) {
+    matches.forEach((match, idx) => {
       // Push the preceding text if there is any
       if (match.index > lastIndex) {
         elements.push(string.substring(lastIndex, match.index));
       }
       // Shallow update values that specified the match
-      let props = {href: match.url, key: `parse${this.parseCounter}match${++idx}`};
+      let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {
@@ -60,7 +59,7 @@ class Linkify extends React.Component {
         match.text
       ));
       lastIndex = match.lastIndex;
-    }
+    });
 
     if (lastIndex < string.length) {
       elements.push(string.substring(lastIndex));
