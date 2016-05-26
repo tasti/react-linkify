@@ -32,9 +32,9 @@ If you're feeling lazy, you can wrap `Linkify` around anywhere that you want lin
 
 Renders to:
 
-react-linkify (`tasti.github.io/react-linkify/`)  
-React component to parse links (urls, emails, etc.) in text into clickable links  
-See examples at `tasti.github.io/react-linkify/`.  
+react-linkify (`tasti.github.io/react-linkify/`)
+React component to parse links (urls, emails, etc.) in text into clickable links
+See examples at `tasti.github.io/react-linkify/`.
 Contact: `tasti@zakarie.com`
 
 
@@ -57,17 +57,37 @@ React.render(
 
 ## Props
 
-**component**  
-The type of component to wrap links in.  
-_type:_ `any`  
-_default:_ `'a'`  
+**component**
+The type of component to wrap links in.
+_type:_ `any`
+_default:_ `'a'`
 
-**properties**  
-The props that will be added to every matched component.  
-_type:_ `object`  
+**properties**
+The props that will be added to every matched component.
+_type:_ `object`
 _default:_ `{}`
 
 NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
+
+**handlers**
+Handlers to match custom link types, like Twitter @mentions.
+
+_type_:
+```js
+arrayOf(
+    shape({
+        prefix: string.isRequired,
+        validate: func.isRequired,
+        normalize: func.isRequired
+    })
+)
+```
+_default:_ `[]`
+
+See the [example mentions handler](https://github.com/markdown-it/linkify-it#example-2-add-twitter-mentions-handler) from linkify-it for more details.
+
+## Customization
+Custom handlers can be added to a specific `Linkify` instance with the `handlers` prop. Additionally, the singleton linkify-it instance can be imported (`import { linkify } from 'react-linkify'`) for global customization. See the [linkify-it api docs](http://markdown-it.github.io/linkify-it/doc/)
 
 ## Examples
 
