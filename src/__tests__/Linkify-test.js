@@ -4,7 +4,7 @@ let React = require('react');
 let TestUtils = require('react-addons-test-utils');
 
 describe('Linkify', () => {
-  let Linkify = require('../Linkify.jsx');
+  let Linkify = require('../Linkify.jsx').default;
 
   describe('#parseString', () => {
     let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
