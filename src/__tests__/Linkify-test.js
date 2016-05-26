@@ -121,6 +121,33 @@ describe('Linkify', () => {
     });
   });
 
+  describe('#addCustomHandlers', () => {
+    it('should match all custom handlers added through the "handlers" prop', () => {
+      const linkify = TestUtils.renderIntoDocument(
+        <Linkify handlers={[{
+          prefix: '@',
+          validate() {
+            return 7;
+          },
+          normalize(match) {
+            match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+          }
+        }]}
+        >
+        </Linkify>
+      );
+
+      const input = ['this is an ', '@mention', ' handler'];
+      const output = linkify.parseString(input.join(''));
+
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`https://twitter.com/mention`);
+      expect(output[1].props.children).toEqual(input[1]);
+      expect(output[2]).toEqual(input[2]);
+    })
+  });
+
   describe('#render', () => {
 
   });

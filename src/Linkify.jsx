@@ -15,9 +15,9 @@ class Linkify extends React.Component {
     emailRegex: React.PropTypes.object,
     handlers: React.PropTypes.arrayOf(
       React.PropTypes.shape({
-        prefix: React.PropTypes.string,
-        validate: React.PropTypes.func,
-        normalize: React.PropTypes.func
+        prefix: React.PropTypes.string.isRequired,
+        validate: React.PropTypes.func.isRequired,
+        normalize: React.PropTypes.func.isRequired
       })
     )
   }
