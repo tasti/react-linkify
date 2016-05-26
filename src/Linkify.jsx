@@ -2,7 +2,7 @@ import React from 'react';
 import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
 
-const linkify = new LinkifyIt();
+export const linkify = new LinkifyIt();
 linkify.tlds(tlds);
 
 class Linkify extends React.Component {
@@ -12,12 +12,43 @@ class Linkify extends React.Component {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
     urlRegex: React.PropTypes.object,
-    emailRegex: React.PropTypes.object
+    emailRegex: React.PropTypes.object,
+    handlers: React.PropTypes.arrayOf(
+      React.PropTypes.shape({
+        prefix: React.PropTypes.string,
+        validate: React.PropTypes.func,
+        normalize: React.PropTypes.func
+      })
+    )
   }
 
   static defaultProps = {
     component: 'a',
     properties: {},
+    handlers: []
+  }
+
+  componentDidMount() {
+    this.addCustomHandlers()
+  }
+
+  componentDidUpdate(nextProps) {
+    if (this.props.handlers !== nextProps.handlers) {
+      this.addCustomHandlers()
+    }
+  }
+
+  addCustomHandlers() {
+    const { handlers } = this.props
+
+    if (handlers.length) {
+      handlers.forEach(handler => {
+        linkify.add(handler.prefix, {
+          validate: handler.validate,
+          normalize: handler.normalize
+        })
+      })
+    }
   }
 
   parseCounter = 0
