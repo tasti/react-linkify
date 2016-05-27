@@ -29,32 +29,37 @@ class Linkify extends React.Component {
   }
 
   componentDidMount() {
-    this.addCustomHandlers()
+    this.addCustomHandlers();
   }
 
   componentDidUpdate(nextProps) {
     if (this.props.handlers !== nextProps.handlers) {
-      this.addCustomHandlers()
+      this.addCustomHandlers();
     }
   }
 
   addCustomHandlers() {
-    const { handlers } = this.props
+    const { handlers } = this.props;
 
     if (handlers.length) {
+      this.linkify = new LinkifyIt();
+      this.linkify.tlds(tlds);
+
       handlers.forEach(handler => {
-        linkify.add(handler.prefix, {
+        this.linkify.add(handler.prefix, {
           validate: handler.validate,
           normalize: handler.normalize
-        })
-      })
+        });
+      });
     }
   }
 
   parseCounter = 0
 
   getMatches(string) {
-    return linkify.match(string);
+    const linkifyInstance = this.linkify || linkify;
+
+    return linkifyInstance.match(string);
   }
 
   parseString(string) {
