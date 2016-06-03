@@ -2,8 +2,33 @@ import React from 'react';
 import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
 
-export const linkify = new LinkifyIt();
-linkify.tlds(tlds);
+const globalCustomizations = {
+  add: [],
+  tlds: [],
+  set: []
+};
+
+export const config = {
+  add: (...args) => {
+    globalCustomizations.add.push(args);
+    return config;
+  },
+  tlds: (...args) => {
+    globalCustomizations.tlds.push(args);
+    return config;
+  },
+  set: (...args) => {
+    globalCustomizations.set.push(args);
+    return config;
+  },
+  resetAll: () => {
+    for (let type in globalCustomizations) {
+      globalCustomizations[type] = [];
+    }
+
+    return config;
+  }
+};
 
 class Linkify extends React.Component {
   static MATCH = 'LINKIFY_MATCH'
@@ -20,7 +45,10 @@ class Linkify extends React.Component {
         validate: React.PropTypes.func.isRequired,
         normalize: React.PropTypes.func.isRequired
       })
-    )
+    ),
+    fuzzyLink: React.PropTypes.bool,
+    fuzzyIP: React.PropTypes.bool,
+    fuzzyEmail: React.PropTypes.bool
   }
 
   static defaultProps = {
@@ -35,33 +63,37 @@ class Linkify extends React.Component {
   }
 
   componentDidUpdate(nextProps) {
-    if (this.props.handlers !== nextProps.handlers) {
-      this.addCustomHandlers();
-    }
+    this.addCustomHandlers();
   }
 
   addCustomHandlers() {
     const { handlers } = this.props;
 
-    if (handlers.length) {
-      this.linkify = new LinkifyIt();
-      this.linkify.tlds(tlds);
+    this.linkify = this.linkify || new LinkifyIt();
+    this.linkify.tlds(tlds);
 
-      handlers.forEach(handler => {
-        this.linkify.add(handler.prefix, {
-          validate: handler.validate,
-          normalize: handler.normalize
-        });
-      });
+    // add global customizations
+    for (let type in globalCustomizations) {
+      globalCustomizations[type].forEach(c => this.linkify[type](...c))
     }
+
+    // add instance customizations
+    (handlers || []).forEach((handler) => {
+      this.linkify.add(handler.prefix, {
+        validate: handler.validate,
+        normalize: handler.normalize
+      });
+    });
+
+    ['fuzzyLink', 'fuzzyIP', 'fuzzyEmail'].forEach(f => {
+      typeof this.props[f] === 'boolean' && this.linkify.set({ [f]: this.props[f] })
+    })
   }
 
   parseCounter = 0
 
   getMatches(string) {
-    const linkifyInstance = this.linkify || linkify;
-
-    return linkifyInstance.match(string);
+    return this.linkify.match(string);
   }
 
   parseString(string) {
