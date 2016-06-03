@@ -187,7 +187,17 @@ describe('Linkify', () => {
   });
 
   describe('#render', () => {
+    let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
 
+    it('should render with default className of Linkify if one is not provided', () => {
+      expect(linkify.props.className).toEqual('Linkify');
+    });
+
+    it('should render with a custom className if one is provided', () => {
+      let linkify = TestUtils.renderIntoDocument(<Linkify className="custom-class"></Linkify>);
+
+      expect(linkify.props.className).toEqual('custom-class');
+    });
   });
 
   describe('#static', () => {
