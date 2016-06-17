@@ -13,7 +13,8 @@ class Linkify extends React.Component {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
     urlRegex: React.PropTypes.object,
-    emailRegex: React.PropTypes.object
+    emailRegex: React.PropTypes.object,
+    hrefDecorator: React.PropTypes.func
   }
 
   static defaultProps = {
@@ -47,6 +48,9 @@ class Linkify extends React.Component {
       }
       // Shallow update values that specified the match
       let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
+      if (this.props.hrefDecorator) {
+        props.href = this.props.hrefDecorator(match.url);
+      }
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {
