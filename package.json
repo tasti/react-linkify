@@ -34,6 +34,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "jest": "^12.1.1",
     "jest-cli": "^12.1.1",
+    "react": "~0.14.2",
     "react-addons-test-utils": "~0.14.2"
   },
   "jest": {
@@ -41,7 +42,6 @@
   },
   "dependencies": {
     "linkify-it": "^1.2.0",
-    "react": "~0.14.2",
     "tlds": "^1.57.0"
   }
 }
