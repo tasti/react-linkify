@@ -5,6 +5,8 @@ let TestUtils = require('react-addons-test-utils');
 
 describe('Linkify', () => {
   let Linkify = require('../Linkify.jsx').default;
+  let linkifyCustomizations = require('../Linkify.jsx').config;
+
 
   describe('#parseString', () => {
     let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
@@ -119,6 +121,174 @@ describe('Linkify', () => {
       expect(output[1].props.children).toEqual(input[1]);
       expect(output[2]).toEqual(input[2]);
     });
+  });
+
+  describe('LinkifyIt config', () => {
+    it('should match a custom handler added through the "handlers" prop', () => {
+      const linkify = TestUtils.renderIntoDocument(
+        <Linkify handlers={[{
+          prefix: '@',
+          validate() {
+            return 7;
+          },
+          normalize(match) {
+            match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+          }
+        }]}
+        >
+        </Linkify>
+      );
+
+      const input = ['this is an ', '@mention', ' handler'];
+      const output = linkify.parseString(input.join(''));
+
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`https://twitter.com/mention`);
+      expect(output[1].props.children).toEqual(input[1]);
+      expect(output[2]).toEqual(input[2]);
+    });
+
+    it('should match multiple custom handlers', () => {
+      const linkify = TestUtils.renderIntoDocument(
+        <Linkify handlers={[{
+          prefix: '@',
+          validate() {
+            return 7;
+          },
+          normalize(match) {
+            match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+          }
+        }, {
+          prefix: '$',
+          validate() {
+            return 7;
+          },
+          normalize(match) {
+            match.url = 'https://blingtwitter.com/' + match.url.replace(/^\$/, '');
+          }
+        }]}
+        >
+        </Linkify>
+      );
+
+      const input = ['this is an ', '@mention', ' and ', '$mention', ' handler'];
+      const output = linkify.parseString(input.join(''));
+
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`https://twitter.com/mention`);
+      expect(output[1].props.children).toEqual(input[1]);
+
+      expect(output[2]).toEqual(input[2]);
+      expect(output[3].type).toEqual('a');
+      expect(output[3].props.href).toEqual(`https://blingtwitter.com/mention`);
+      expect(output[3].props.children).toEqual(input[3]);
+      expect(output[4]).toEqual(input[4]);
+    })
+
+    it('should apply global customizations', () => {
+      linkifyCustomizations
+          .resetAll()
+          .tlds('linkify', true)
+          .add('@', {
+            validate() {
+              return 7;
+            },
+            normalize(match) {
+              match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+            }
+          })
+      const linkify = TestUtils.renderIntoDocument(
+          <Linkify />
+      );
+
+      const input = ['this is an ', '@mention', ' and ', 'test.linkify', ' TLD handler'];
+      const output = linkify.parseString(input.join(''));
+
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`https://twitter.com/mention`);
+      expect(output[1].props.children).toEqual(input[1]);
+
+      expect(output[2]).toEqual(input[2]);
+      expect(output[3].type).toEqual('a');
+      expect(output[3].props.href).toEqual(`http://test.linkify`);
+      expect(output[3].props.children).toEqual(input[3]);
+      expect(output[4]).toEqual(input[4]);
+    });
+
+    it('should merge global and instance handlers', () => {
+      linkifyCustomizations
+          .resetAll()
+          .add('@', {
+            validate() {
+              return 7;
+            },
+            normalize(match) {
+              match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+            }
+          })
+      const linkify = TestUtils.renderIntoDocument(
+          <Linkify handlers={[{
+              prefix: '$',
+              validate() {
+                return 7;
+              },
+              normalize(match) {
+                match.url = 'https://blingtwitter.com/' + match.url.replace(/^\$/, '');
+              }
+            }]}
+          >
+          </Linkify>
+      );
+
+      const input = ['this is an ', '@mention', ' and ', '$mention', ' handler'];
+      const output = linkify.parseString(input.join(''));
+
+      expect(output[0]).toEqual(input[0]);
+      expect(output[1].type).toEqual('a');
+      expect(output[1].props.href).toEqual(`https://twitter.com/mention`);
+      expect(output[1].props.children).toEqual(input[1]);
+
+      expect(output[2]).toEqual(input[2]);
+      expect(output[3].type).toEqual('a');
+      expect(output[3].props.href).toEqual(`https://blingtwitter.com/mention`);
+      expect(output[3].props.children).toEqual(input[3]);
+      expect(output[4]).toEqual(input[4]);
+    });
+
+    it('should set fuzzy* options', () => {
+      const linkify = TestUtils.renderIntoDocument(
+          <Linkify fuzzyLink={ false } />
+      );
+
+      const linkInput = 'this should not match: www.test.com';
+      const linkOutput = linkify.parseString(linkInput);
+      expect(linkOutput).toEqual(linkInput);
+    });
+
+    it('should reset global customizations', () => {
+      linkifyCustomizations
+          .add('@', {
+            validate() {
+              return 7;
+            },
+            normalize(match) {
+              match.url = 'https://twitter.com/' + match.url.replace(/^@/, '');
+            }
+          })
+          .resetAll()
+
+      const linkify = TestUtils.renderIntoDocument(
+          <Linkify />
+      );
+
+      const input = 'this @mention should not match';
+      const output = linkify.parseString(input);
+
+      expect(output).toEqual(input);
+    })
   });
 
   describe('#render', () => {
