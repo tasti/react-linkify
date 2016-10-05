@@ -69,6 +69,14 @@ _default:_ `{}`
 
 NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
 
+
+## Customization
+
+You can access to the global `Linkify` instance used to linkify contents by importing it (`import { linkify } from 'react-linkify'`).
+That way you can customize as needed (e.g. disabling existing schemas or adding new ones).
+
+Note that any customization made to that instance will affect every `Linkify` component you use.
+
 ## Examples
 
 All kind of links detectable by

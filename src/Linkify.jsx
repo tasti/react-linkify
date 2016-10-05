@@ -2,7 +2,7 @@ import React from 'react';
 import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
 
-const linkify = new LinkifyIt();
+export const linkify = new LinkifyIt();
 linkify.tlds(tlds);
 
 class Linkify extends React.Component {
