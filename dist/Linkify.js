@@ -75,6 +75,9 @@ var Linkify = function (_React$Component) {
         }
         // Shallow update values that specified the match
         var props = { href: match.url, key: 'parse' + _this2.parseCounter + 'match' + idx };
+        if (_this2.props.hrefDecorator) {
+          props.href = _this2.props.hrefDecorator(match.url);
+        }
         for (var key in _this2.props.properties) {
           var val = _this2.props.properties[key];
           if (val === Linkify.MATCH) {
@@ -135,7 +138,8 @@ Linkify.propTypes = {
   component: _react2.default.PropTypes.any,
   properties: _react2.default.PropTypes.object,
   urlRegex: _react2.default.PropTypes.object,
-  emailRegex: _react2.default.PropTypes.object
+  emailRegex: _react2.default.PropTypes.object,
+  hrefDecorator: _react2.default.PropTypes.func
 };
 Linkify.defaultProps = {
   className: 'Linkify',

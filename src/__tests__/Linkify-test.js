@@ -119,6 +119,17 @@ describe('Linkify', () => {
       expect(output[1].props.children).toEqual(input[1]);
       expect(output[2]).toEqual(input[2]);
     });
+
+    it('should decorate parsed href if hrefDecorator is provided', () => {
+      const exampleHrefDecorator = url => `decorated/${url}`;
+      const input = 'http://dev.null';
+      let linkify = TestUtils.renderIntoDocument(<Linkify hrefDecorator={exampleHrefDecorator}></Linkify>);
+      let output = linkify.parseString(input);
+
+      expect(output.type).toEqual('a');
+      expect(output.props.href).toEqual(`decorated/${input}`);
+      expect(output.props.children).toEqual(input);
+    });
   });
 
   describe('#render', () => {

@@ -67,6 +67,10 @@ The props that will be added to every matched component.
 _type:_ `object`  
 _default:_ `{}`
 
+**hrefDecorator**  
+Optional function that takes matched URL and returns string to use as `href`  
+_type:_ `function`
+
 NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
 
 
