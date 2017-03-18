@@ -13,7 +13,9 @@ class Linkify extends React.Component {
     component: React.PropTypes.any,
     properties: React.PropTypes.object,
     urlRegex: React.PropTypes.object,
-    emailRegex: React.PropTypes.object
+    emailRegex: React.PropTypes.object,
+    preCompileURL: React.PropTypes.func,
+    preCompileText: React.PropTypes.func
   }
 
   static defaultProps = {
@@ -46,7 +48,14 @@ class Linkify extends React.Component {
         elements.push(string.substring(lastIndex, match.index));
       }
       // Shallow update values that specified the match
-      let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
+      // Provide `preCompileURL` function in props, if you want to edit the url before
+      let props = {}
+      if(this.props.preCompileURL){
+        props = {href: this.props.preCompileURL(match.url), key: `parse${this.parseCounter}match${idx}`};
+      } else {
+        props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
+      }
+      
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {
@@ -55,10 +64,17 @@ class Linkify extends React.Component {
 
         props[key] = val;
       }
+      
+      let text = match.text;
+      
+      if(this.props.preCompileText){
+         text = this.props.preCompileText(match.text);
+      }
+      
       elements.push(React.createElement(
         this.props.component,
         props,
-        match.text
+        text
       ));
       lastIndex = match.lastIndex;
     });
