@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
 import PropTypes from 'prop-types';
