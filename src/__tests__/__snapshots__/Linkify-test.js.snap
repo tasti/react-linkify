@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Linkify #parse should parse elements with dangerouslySetInnerHTML 1`] = `
+<div>
+  <a
+    href="http://facebook.github.io/react/"
+  >
+    http://facebook.github.io/react/
+  </a>
+</div>
+`;

@@ -92,6 +92,15 @@ describe('Linkify', () => {
       expect(output).toEqual(input);
     });
 
+    it('should parse elements with dangerouslySetInnerHTML', () => {
+      let input = (
+        <div dangerouslySetInnerHTML={{ __html: "http://facebook.github.io/react/"}}/>
+      );
+      let output = linkify.parse(input);
+
+      expect(output).toMatchSnapshot();
+    });
+
     it('should not parse <button> elements', () => {
       let input = <button>http://facebook.github.io/react/</button>;
       let output = linkify.parse(input);
