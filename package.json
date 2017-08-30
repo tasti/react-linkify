@@ -39,6 +39,6 @@
   "dependencies": {
     "linkify-it": "^1.2.0",
     "prop-types": "^15.5.8",
-    "tlds": "^1.57.0"
+    "tlds": "^1.194.0"
   }
 }
