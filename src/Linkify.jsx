@@ -18,6 +18,7 @@ class Linkify extends React.Component {
 
   static defaultProps = {
     className: 'Linkify',
+    newTab: false,
     component: 'a',
     properties: {},
   }
