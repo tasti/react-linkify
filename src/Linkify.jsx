@@ -47,6 +47,9 @@ class Linkify extends React.Component {
       }
       // Shallow update values that specified the match
       let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
+
+      // Open link in new tab, if specified.
+      if (this.props.newTab) props.target = '_blank';
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {
