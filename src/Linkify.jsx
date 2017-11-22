@@ -11,10 +11,9 @@ class Linkify extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
+    newTab: PropTypes.bool,
     component: PropTypes.any,
     properties: PropTypes.object,
-    urlRegex: PropTypes.object,
-    emailRegex: PropTypes.object
   }
 
   static defaultProps = {
