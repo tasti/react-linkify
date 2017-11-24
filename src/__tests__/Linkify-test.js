@@ -119,6 +119,16 @@ describe('Linkify', () => {
       expect(output[1].props.children).toEqual(input[1]);
       expect(output[2]).toEqual(input[2]);
     });
+
+    it('should parse complex urls', () => {
+        let input = [
+            'For more information ',
+            'https://www.wayfair.de/dCor-design---DCOO1623-L6-K~DCOO1623.html?refid=MODE368-DCOO1623_21727408&PiID%5B%5D=21727408',
+            '.'
+        ];
+        let output = linkify.parseString(input.join(''));
+        expect(output[1].props.children).toEqual(input[1]);
+    });
   });
 
   describe('#render', () => {
