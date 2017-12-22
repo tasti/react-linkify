@@ -50,6 +50,11 @@ class Linkify extends React.Component {
       let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
+
+        if (typeof val === 'function') {
+          val = val(match.url);
+        }
+
         if (val === Linkify.MATCH) {
           val = match.url;
         }
