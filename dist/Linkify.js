@@ -81,6 +81,11 @@ var Linkify = function (_React$Component) {
         var props = { href: match.url, key: 'parse' + _this2.parseCounter + 'match' + idx };
         for (var key in _this2.props.properties) {
           var val = _this2.props.properties[key];
+
+          if (typeof val === 'function') {
+            val = val(match.url);
+          }
+
           if (val === Linkify.MATCH) {
             val = match.url;
           }
