@@ -8,4 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Use `yarn` instead of `npm`.
 
+### Removed
+- No longer commit `dist` folder.
+
 [Unreleased]: https://github.com/tasti/react-linkify/compare/v0.2.2...HEAD

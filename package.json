@@ -24,6 +24,7 @@
   ],
   "scripts": {
     "build": "babel src/Linkify.jsx -o dist/Linkify.js",
+    "prepublish": "npm run build",
     "test": "BABEL_JEST_STAGE=0 jest"
   },
   "devDependencies": {
