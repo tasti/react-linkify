@@ -32,13 +32,19 @@ If you're feeling lazy, you can wrap `Linkify` around anywhere that you want lin
 
 Renders to:
 
-react-linkify (`tasti.github.io/react-linkify/`)  
-React component to parse links (urls, emails, etc.) in text into clickable links  
-See examples at `tasti.github.io/react-linkify/`.  
+react-linkify (`tasti.github.io/react-linkify/`)
+React component to parse links (urls, emails, etc.) in text into clickable links
+See examples at `tasti.github.io/react-linkify/`.
 Contact: `tasti@zakarie.com`
 
 
 ## Installation
+
+```
+yarn add react-linkify
+```
+
+or
 
 ```
 npm install react-linkify --save
@@ -57,14 +63,14 @@ React.render(
 
 ## Props
 
-**component**  
-The type of component to wrap links in.  
-_type:_ `any`  
-_default:_ `'a'`  
+**component**
+The type of component to wrap links in.
+_type:_ `any`
+_default:_ `'a'`
 
-**properties**  
-The props that will be added to every matched component.  
-_type:_ `object`  
+**properties**
+The props that will be added to every matched component.
+_type:_ `object`
 _default:_ `{}`
 
 NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
