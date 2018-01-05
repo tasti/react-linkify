@@ -1,0 +1,13 @@
+[ignore]
+.*/dist/.*
+.*/__tests__/.*
+
+[include]
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]
