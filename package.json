@@ -5,7 +5,7 @@
   "homepage": "http://tasti.github.io/react-linkify/",
   "author": "Tasti Zakarie",
   "license": "MIT",
-  "main": "dist/Linkify.js",
+  "main": "dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/tasti/react-linkify.git"
@@ -23,7 +23,7 @@
     "urlify"
   ],
   "scripts": {
-    "build": "babel src/Linkify.jsx -o dist/Linkify.js",
+    "build": "babel src/ -d dist/",
     "prepublish": "npm run build",
     "test": "BABEL_JEST_STAGE=0 jest"
   },

@@ -72,23 +72,21 @@ class Linkify extends React.Component {
   }
 
   parse(children) {
-    let parsed = children;
-
     if (typeof children === 'string') {
-      parsed = this.parseString(children);
+      return this.parseString(children);
     } else if (React.isValidElement(children) && (children.type !== 'a') && (children.type !== 'button')) {
-      parsed = React.cloneElement(
+      return React.cloneElement(
         children,
         {key: `parse${++this.parseCounter}`},
         this.parse(children.props.children)
       );
     } else if (children instanceof Array) {
-      parsed = children.map(child => {
+      return children.map(child => {
         return this.parse(child);
       });
     }
 
-    return parsed;
+    return children;
   }
 
   render() {
