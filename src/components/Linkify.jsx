@@ -1,35 +1,36 @@
-import React from 'react';
+// @flow
+
+import * as React from 'react';
 import LinkifyIt from 'linkify-it';
 import tlds from 'tlds';
-import PropTypes from 'prop-types';
 
 export const linkify = new LinkifyIt();
 linkify.tlds(tlds);
 
-class Linkify extends React.Component {
-  static MATCH = 'LINKIFY_MATCH'
+type Props = {
+  children: React.Node,
+  className: string,
+  component: any,
+  properties: Object,
+  urlRegex: Object,
+  emailRegex: Object,
+};
 
-  static propTypes = {
-    className: PropTypes.string,
-    component: PropTypes.any,
-    properties: PropTypes.object,
-    urlRegex: PropTypes.object,
-    emailRegex: PropTypes.object
-  }
-
+class Linkify extends React.Component<Props, {}> {
   static defaultProps = {
     className: 'Linkify',
     component: 'a',
     properties: {},
-  }
+  };
 
-  parseCounter = 0
+  static MATCH = 'LINKIFY_MATCH';
+  parseCounter = 0;
 
-  getMatches(string) {
+  getMatches(string: string) {
     return linkify.match(string);
   }
 
-  parseString(string) {
+  parseString(string: string) {
     let elements = [];
     if (string === '') {
       return elements;
@@ -71,7 +72,7 @@ class Linkify extends React.Component {
     return (elements.length === 1) ? elements[0] : elements;
   }
 
-  parse(children) {
+  parse(children: any) {
     if (typeof children === 'string') {
       return this.parseString(children);
     } else if (React.isValidElement(children) && (children.type !== 'a') && (children.type !== 'button')) {
@@ -81,7 +82,7 @@ class Linkify extends React.Component {
         this.parse(children.props.children)
       );
     } else if (children instanceof Array) {
-      return children.map(child => {
+      return children.map((child) => {
         return this.parse(child);
       });
     }
