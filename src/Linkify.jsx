@@ -11,14 +11,14 @@ class Linkify extends React.Component {
 
   static propTypes = {
     className: PropTypes.string,
+    newTab: PropTypes.bool,
     component: PropTypes.any,
     properties: PropTypes.object,
-    urlRegex: PropTypes.object,
-    emailRegex: PropTypes.object
   }
 
   static defaultProps = {
     className: 'Linkify',
+    newTab: false,
     component: 'a',
     properties: {},
   }
@@ -48,6 +48,9 @@ class Linkify extends React.Component {
       }
       // Shallow update values that specified the match
       let props = {href: match.url, key: `parse${this.parseCounter}match${idx}`};
+
+      // Open link in new tab, if specified.
+      if (this.props.newTab) props.target = '_blank';
       for (let key in this.props.properties) {
         let val = this.props.properties[key];
         if (val === Linkify.MATCH) {

@@ -143,6 +143,23 @@ describe('Linkify', () => {
 
       expect(linkify.props.className).toEqual('custom-class');
     });
+
+    it('should not render target attribute if newTab is not provided', () => {
+      const linkify = TestUtils.renderIntoDocument(<Linkify>'https://github.com/facebook/react'</Linkify>);
+      const anchor = TestUtils.findRenderedDOMComponentWithTag(linkify, 'a');
+
+      expect(linkify.props.newTab).toEqual(false);
+      expect(anchor.getAttribute('target')).not.toBe('_blank');
+      expect(anchor.getAttribute('target')).toBeFalsy();
+    });
+
+    it('should render target: _blank  if newTab is provided', () => {
+      const linkify = TestUtils.renderIntoDocument(<Linkify newTab>'https://github.com/facebook/react'</Linkify>);
+      const anchor = TestUtils.findRenderedDOMComponentWithTag(linkify, 'a');
+
+      expect(linkify.props.newTab).toEqual(true);
+      expect(anchor.getAttribute('target')).toEqual('_blank');
+    });
   });
 
   describe('#static', () => {
