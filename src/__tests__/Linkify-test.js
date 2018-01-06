@@ -76,6 +76,17 @@ describe('Linkify', () => {
       expect(output[1].props.href).toEqual(input[1]);
       expect(output[1].props.children).toEqual(input[1]);
     });
+
+    it('should delegate to transformAnchorText if present', () => {
+      const transformFn = (text) => 'See this repo on Github';
+      let linkify = TestUtils.renderIntoDocument(<Linkify transformAnchorText={transformFn}></Linkify>);
+      let input = ['https://github.com/facebook/react'];
+      let output = linkify.parseString(input.join(''));
+
+      expect(output.type).toEqual('a');
+      expect(output.props.href).toEqual(input[0]);
+      expect(output.props.children).toEqual('See this repo on Github');
+    });
   });
 
   describe('#parse', () => {

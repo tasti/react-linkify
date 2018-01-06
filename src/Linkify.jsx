@@ -12,9 +12,10 @@ class Linkify extends React.Component {
   static propTypes = {
     className: PropTypes.string,
     component: PropTypes.any,
+    emailRegex: PropTypes.object,
     properties: PropTypes.object,
+    transformAnchorText: PropTypes.func,
     urlRegex: PropTypes.object,
-    emailRegex: PropTypes.object
   }
 
   static defaultProps = {
@@ -56,10 +57,11 @@ class Linkify extends React.Component {
 
         props[key] = val;
       }
+      const text = this.props.transformAnchorText ? this.props.transformAnchorText(match.text) : match.text;
       elements.push(React.createElement(
         this.props.component,
         props,
-        match.text
+        text
       ));
       lastIndex = match.lastIndex;
     });
