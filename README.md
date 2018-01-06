@@ -53,7 +53,7 @@ npm install react-linkify --save
 ## Usage
 
 ```js
-var Linkify = require('react-linkify');
+import Linkify from 'react-linkify';
 
 React.render(
   <Linkify>Examples are available at tasti.github.io/react-linkify/.</Linkify>,
