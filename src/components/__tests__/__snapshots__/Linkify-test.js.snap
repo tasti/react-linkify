@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Linkify #render should render correctly (end) 1`] = `
+Array [
+  "The React source code is located at ",
+  <a
+    href="https://github.com/facebook/react"
+  >
+    https://github.com/facebook/react
+  </a>,
+]
+`;
+
+exports[`Linkify #render should render correctly (middle) 1`] = `
+Array [
+  "Go to ",
+  <a
+    href="https://github.com/facebook/react"
+  >
+    https://github.com/facebook/react
+  </a>,
+  " for the React source code.",
+]
+`;
+
+exports[`Linkify #render should render correctly (start) 1`] = `
+Array [
+  <a
+    href="https://github.com/facebook/react"
+  >
+    https://github.com/facebook/react
+  </a>,
+  " is the location to the React source code.",
+]
+`;
+
+exports[`Linkify #render testing 1`] = `
+Array [
+  "The React source code is located at ",
+  <bold>
+    woah
+  </bold>,
+]
+`;
