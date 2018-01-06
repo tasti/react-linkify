@@ -1,24 +1,25 @@
 jest.autoMockOff();
 
-let React = require('react');
-let TestUtils = require('react-addons-test-utils');
+const React = require('react');
+const ReactTestUtils = require('react-dom/test-utils');
+const renderer = require('react-test-renderer');
 
 describe('Linkify', () => {
-  let Linkify = require('../Linkify.jsx').default;
+  const Linkify = require('../Linkify.jsx').default;
 
   describe('#parseString', () => {
-    let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
+    const linkify = ReactTestUtils.renderIntoDocument(<Linkify>test</Linkify>);
 
     it('should not modify the string', () => {
-      let input = 'React is a JavaScript library for building user interfaces.';
-      let output = linkify.parseString(input);
+      const input = 'React is a JavaScript library for building user interfaces.';
+      const output = linkify.parseString(input);
 
       expect(output).toEqual(input);
     });
 
     it('should parse http url', () => {
-      let input = 'http://facebook.github.io/react/';
-      let output = linkify.parseString(input);
+      const input = 'http://facebook.github.io/react/';
+      const output = linkify.parseString(input);
 
       expect(output.type).toEqual('a');
       expect(output.props.href).toEqual(input);
@@ -26,8 +27,8 @@ describe('Linkify', () => {
     });
 
     it('should parse https url', () => {
-      let input = 'https://facebook.github.io/react/';
-      let output = linkify.parseString(input);
+      const input = 'https://facebook.github.io/react/';
+      const output = linkify.parseString(input);
 
       expect(output.type).toEqual('a');
       expect(output.props.href).toEqual(input);
@@ -35,8 +36,8 @@ describe('Linkify', () => {
     });
 
     it('should parse no protocol url', () => {
-      let input = 'facebook.github.io/react/';
-      let output = linkify.parseString(input);
+      const input = 'facebook.github.io/react/';
+      const output = linkify.parseString(input);
 
       expect(output.type).toEqual('a');
       expect(output.props.href).toEqual(`http://${input}`);
@@ -44,8 +45,8 @@ describe('Linkify', () => {
     });
 
     it('should parse url in beginning of text', () => {
-      let input = ['https://github.com/facebook/react', ' is the location to the React source code.'];
-      let output = linkify.parseString(input.join(''));
+      const input = ['https://github.com/facebook/react', ' is the location to the React source code.'];
+      const output = linkify.parseString(input.join(''));
 
       expect(Array.isArray(output)).toEqual(true);
       expect(output[0].type).toEqual('a');
@@ -55,8 +56,8 @@ describe('Linkify', () => {
     });
 
     it('should parse url in middle of text', () => {
-      let input = ['Go to ', 'https://github.com/facebook/react', ' for the React source code.'];
-      let output = linkify.parseString(input.join(''));
+      const input = ['Go to ', 'https://github.com/facebook/react', ' for the React source code.'];
+      const output = linkify.parseString(input.join(''));
 
       expect(Array.isArray(output)).toEqual(true);
       expect(output[0]).toEqual(input[0]);
@@ -67,8 +68,8 @@ describe('Linkify', () => {
     });
 
     it('should parse url in end of text', () => {
-      let input = ['The React source code is located at ', 'https://github.com/facebook/react'];
-      let output = linkify.parseString(input.join(''));
+      const input = ['The React source code is located at ', 'https://github.com/facebook/react'];
+      const output = linkify.parseString(input.join(''));
 
       expect(Array.isArray(output)).toEqual(true);
       expect(output[0]).toEqual(input[0]);
@@ -79,29 +80,29 @@ describe('Linkify', () => {
   });
 
   describe('#parse', () => {
-    let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
+    const linkify = ReactTestUtils.renderIntoDocument(<Linkify>test</Linkify>);
 
     it('should not parse <a> elements', () => {
-      let input = (
+      const input = (
         <a href="http://facebook.github.io/react/">
           http://facebook.github.io/react/
         </a>
       );
-      let output = linkify.parse(input);
+      const output = linkify.parse(input);
 
       expect(output).toEqual(input);
     });
 
     it('should not parse <button> elements', () => {
-      let input = <button>http://facebook.github.io/react/</button>;
-      let output = linkify.parse(input);
+      const input = <button>http://facebook.github.io/react/</button>;
+      const output = linkify.parse(input);
 
       expect(output).toEqual(input);
     });
 
     it('should parse email', () => {
-      let input = 'tasti@zakarie.com';
-      let output = linkify.parseString(input);
+      const input = 'tasti@zakarie.com';
+      const output = linkify.parseString(input);
 
       expect(output.type).toEqual('a');
       expect(output.props.href).toEqual(`mailto:${input}`);
@@ -109,8 +110,8 @@ describe('Linkify', () => {
     });
 
     it('should parse email in sentence', () => {
-      let input = ['For more information, contact ', 'tasti@zakarie.com', '.'];
-      let output = linkify.parseString(input.join(''));
+      const input = ['For more information, contact ', 'tasti@zakarie.com', '.'];
+      const output = linkify.parseString(input.join(''));
 
       expect(Array.isArray(output)).toEqual(true);
       expect(output[0]).toEqual(input[0]);
@@ -121,31 +122,63 @@ describe('Linkify', () => {
     });
 
     it('should parse complex urls', () => {
-        let input = [
-            'For more information ',
-            'https://www.wayfair.de/dCor-design---DCOO1623-L6-K~DCOO1623.html?refid=MODE368-DCOO1623_21727408&PiID%5B%5D=21727408',
-            '.'
-        ];
-        let output = linkify.parseString(input.join(''));
-        expect(output[1].props.children).toEqual(input[1]);
+      const input = [
+        'For more information ',
+        'https://www.wayfair.de/dCor-design---DCOO1623-L6-K~DCOO1623.html?refid=MODE368-DCOO1623_21727408&PiID%5B%5D=21727408',
+        '.',
+      ];
+
+      const output = linkify.parseString(input.join(''));
+      expect(output[1].props.children).toEqual(input[1]);
     });
   });
 
   describe('#render', () => {
-    let linkify = TestUtils.renderIntoDocument(<Linkify></Linkify>);
+    it('should render correctly (start)', () => {
+      const tree = renderer
+        .create(<Linkify>https://github.com/facebook/react is the location to the React source code.</Linkify>)
+        .toJSON();
 
-    it('should render with default className of Linkify if one is not provided', () => {
-      expect(linkify.props.className).toEqual('Linkify');
+      expect(tree).toMatchSnapshot();
     });
 
-    it('should render with a custom className if one is provided', () => {
-      let linkify = TestUtils.renderIntoDocument(<Linkify className="custom-class"></Linkify>);
+    it('should render correctly (middle)', () => {
+      const tree = renderer
+        .create(<Linkify>Go to https://github.com/facebook/react for the React source code.</Linkify>)
+        .toJSON();
 
-      expect(linkify.props.className).toEqual('custom-class');
+      expect(tree).toMatchSnapshot();
     });
+
+    it('should render correctly (end)', () => {
+      const tree = renderer
+        .create(<Linkify>The React source code is located at https://github.com/facebook/react</Linkify>)
+        .toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+
+    it('testing', () => {
+      const tree = renderer
+        .create(<React.Fragment>The React source code is located at <bold>woah</bold></React.Fragment>)
+        .toJSON();
+
+      expect(tree).toMatchSnapshot();
+    });
+
+    // it('should render with default className of Linkify if one is not provided', () => {
+    //   const linkify = ReactTestUtils.renderIntoDocument(<Linkify></Linkify>);
+    //   expect(linkify.props.className).toEqual('Linkify');
+    // });
+
+    // it('should render with a custom className if one is provided', () => {
+    //   const linkify = ReactTestUtils.renderIntoDocument(<Linkify className="custom-class"></Linkify>);
+
+    //   expect(linkify.props.className).toEqual('custom-class');
+    // });
   });
 
   describe('#static', () => {
-    //let Linkify = require('../Linkify.jsx');
+    //const Linkify = require('../Linkify.jsx');
   });
 });
