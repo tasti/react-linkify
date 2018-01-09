@@ -28,7 +28,7 @@ class Linkify extends React.Component<Props, {}> {
       return string;
     }
 
-    const matches = this.props.matchDecorator(string);console.log(string, matches);
+    const matches = this.props.matchDecorator(string);
     if (!matches) {
       return string;
     }
