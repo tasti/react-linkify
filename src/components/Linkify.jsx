@@ -28,7 +28,7 @@ class Linkify extends React.Component<Props, {}> {
       return string;
     }
 
-    const matches = this.props.matchDecorator(string);console.log(string, matches);
+    const matches = this.props.matchDecorator(string);
     if (!matches) {
       return string;
     }
@@ -69,7 +69,7 @@ class Linkify extends React.Component<Props, {}> {
     return children;
   }
 
-  render() {
+  render(): React.Node {
     return (
       <React.Fragment>
         {this.parse(this.props.children)}
