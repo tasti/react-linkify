@@ -6,6 +6,8 @@
   "author": "Tasti Zakarie",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "index.d.ts",
+  "files": ["dist", "index.d.ts"],
   "repository": {
     "type": "git",
     "url": "https://github.com/tasti/react-linkify.git"
