@@ -6,6 +6,7 @@
   "author": "Tasti Zakarie",
   "license": "MIT",
   "main": "dist/index.js",
+  "files": ["dist"],
   "repository": {
     "type": "git",
     "url": "https://github.com/tasti/react-linkify.git"
@@ -23,6 +24,7 @@
     "urlify"
   ],
   "scripts": {
+    "prepare": "npm run build",
     "build": "babel src/ -d dist/",
     "prepublish": "npm run build",
     "test": "BABEL_JEST_STAGE=0 jest --testPathIgnorePatterns /dist/"
