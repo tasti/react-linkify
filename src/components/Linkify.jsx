@@ -45,7 +45,7 @@ class Linkify extends React.Component<Props, {}> {
 
       const decoratedHref = this.props.hrefDecorator(match.url);
       const decoratedText = this.props.textDecorator(match.text);
-      const decoratedComponent = this.props.componentDecorator(decoratedHref, decoratedText, i, openInNewWindow);
+      const decoratedComponent = this.props.componentDecorator(decoratedHref, decoratedText, i, this.props.openInNewWindow);
       elements.push(decoratedComponent);
 
       lastIndex = match.lastIndex;
