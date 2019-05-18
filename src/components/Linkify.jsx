@@ -13,7 +13,7 @@ type Props = {
   hrefDecorator: (string) => string,
   matchDecorator: (string) => Array<Object>,
   textDecorator: (string) => string,
-  openInNewWindow: boolean,
+  aTagTarget: string,
 };
 
 class Linkify extends React.Component<Props, {}> {
@@ -22,7 +22,7 @@ class Linkify extends React.Component<Props, {}> {
     hrefDecorator: defaultHrefDecorator,
     matchDecorator: defaultMatchDecorator,
     textDecorator: defaultTextDecorator,
-    openInNewWindow: false,
+    aTagTarget: '_self',
   };
 
   parseString(string: string) {
@@ -45,7 +45,7 @@ class Linkify extends React.Component<Props, {}> {
 
       const decoratedHref = this.props.hrefDecorator(match.url);
       const decoratedText = this.props.textDecorator(match.text);
-      const decoratedComponent = this.props.componentDecorator(decoratedHref, decoratedText, i, this.props.openInNewWindow);
+      const decoratedComponent = this.props.componentDecorator(decoratedHref, decoratedText, i, this.props.aTagTarget);
       elements.push(decoratedComponent);
 
       lastIndex = match.lastIndex;

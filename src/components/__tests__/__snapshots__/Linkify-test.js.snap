@@ -5,6 +5,7 @@ Array [
   "The React source code is located at ",
   <a
     href="https://github.com/facebook/react"
+    target="_self"
   >
     https://github.com/facebook/react
   </a>,
@@ -16,6 +17,7 @@ Array [
   "Go to ",
   <a
     href="https://github.com/facebook/react"
+    target="_self"
   >
     https://github.com/facebook/react
   </a>,
@@ -27,6 +29,7 @@ exports[`Linkify #render should render correctly (start) 1`] = `
 Array [
   <a
     href="https://github.com/facebook/react"
+    target="_self"
   >
     https://github.com/facebook/react
   </a>,
