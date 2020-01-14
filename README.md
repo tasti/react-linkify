@@ -1,10 +1,6 @@
 # [react-linkify](http://tasti.github.io/react-linkify/)
 React component to parse links (urls, emails, etc.) in text into clickable links
 
-## Examples
-
-Live examples are available at [http://tasti.github.io/react-linkify/](http://tasti.github.io/react-linkify/).
-
 ### Basic
 
 Any link that appears inside the `Linkify` component will become clickable.
@@ -62,19 +58,48 @@ React.render(
 ```
 
 ## Props
+### children
+The children will be traversed and unless a node is an `a` or a `button` the content of a node will be matched using the matchDecorator.
 
-**component**
-The type of component to wrap links in.
-_type:_ `any`
-_default:_ `'a'`
+_type:_ `React.node`
 
-**properties**
-The props that will be added to every matched component.
-_type:_ `object`
-_default:_ `{}`
+### componentDecorator
+The componentDecorator is called for every matched link, the return-value is rendered in place of the link.
 
-NOTE: Use `Linkify.MATCH` as a value to specify the matched link. The properties prop will always contain `{href: Linkify.MATCH, key: 'LINKIFY_KEY_#'}` unless overridden.
+The `defaultComponentDecorator` returns an anchor-tag and does not modify the given href, the given key or the given text.
 
+_type:_ `(href: string, text: string, key: number)  => React.node`
+
+_default:_ `defaultComponentDecorator`
+
+### hrefDecorator
+The hrefDecorator is called to determine how to transform the original link the href to be used.
+
+The `defaultHrefDecorator` returns the original link without modification.
+
+_type:_ `(href: string)  => string`
+
+_default:_ `defaultHrefDecorator`
+
+### matchDecorator
+The matchDecorator is used to find links in the `children`-prop. 
+
+The `text`-argument is the text found inside the `children`-prop.
+
+The `defaultMatchDecorator` uses LinkyIt to find links.
+
+_type:_ `(text: string)  => Array<{ index: number, url: string, text: string }>`
+
+_default:_ `defaultMatchDecorator`
+
+### textDecorator
+The textDecorator is called to determine how to display the link.
+
+The `defaultTextDecorator` returns the string without modification.
+
+_type:_ `(text: string)  => string`
+
+_default:_ `defaultTextDecorator`
 
 ## Customization
 
