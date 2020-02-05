@@ -9,7 +9,7 @@ Live examples are available at [http://tasti.github.io/react-linkify/](http://ta
 
 Any link that appears inside the `Linkify` component will become clickable.
 
-```
+```html
 <Linkify>See examples at tasti.github.io/react-linkify/.</Linkify>
 ```
 
@@ -21,7 +21,7 @@ See examples at `tasti.github.io/react-linkify/`.
 
 If you're feeling lazy, you can wrap `Linkify` around anywhere that you want links to become clickable. Even with nested elements, it traverses the tree to find links.
 
-```
+```html
 <Linkify>
   <div>react-linkify <span>(tasti.github.io/react-linkify/)</span></div>
     <div>React component to parse links (urls, emails, etc.) in text into clickable links</div>
@@ -40,13 +40,13 @@ Contact: `tasti@zakarie.com`
 
 ## Installation
 
-```
+```sh
 yarn add react-linkify
 ```
 
 or
 
-```
+```sh
 npm install react-linkify --save
 ```
 
