@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import defaultComponentDecorator from 'decorators/defaultComponentDecorator';
 import defaultHrefDecorator from 'decorators/defaultHrefDecorator';
-import defaultMatchDecorator from 'decorators/defaultMatchDecorator';
+import defaultMatchDecorator, { linkify } from 'decorators/defaultMatchDecorator';
 import defaultTextDecorator from 'decorators/defaultTextDecorator';
 
 type Props = {
@@ -77,5 +77,7 @@ class Linkify extends React.Component<Props, {}> {
     );
   }
 }
+
+export { linkify };
 
 export default Linkify;
